@@ -7,6 +7,16 @@ export default {
     '先生',
     '女士'
   ],
+  empStatus: [
+    '在职',
+    '停职',
+    '离职'
+  ],
+  customerStatus: [
+    '正常',
+    '封禁',
+    '删除'
+  ],
   status: [
     '正常',
     '删除'
@@ -44,5 +54,12 @@ export default {
   accountType: [
     '客户',
     '员工'
+  ],
+  euiColor: [
+    'success',
+    'warning',
+    'danger',
+    'info',
+    ''
   ]
 };

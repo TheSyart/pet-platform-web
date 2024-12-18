@@ -14,10 +14,14 @@
                 <template #default="{ row }">
                     <!-- 如果是 status 列，则渲染相应的按钮 -->
                     <template v-if="column.prop === 'status'">
-                        <el-button v-if="row.status === 0" type="primary" size="mini"
+                        <el-button type="primary" size="mini" @click="viewOrderInfo(row.id, 0)">查看</el-button>
+                        <el-button v-if="row.orderstatus === 3" type="danger" size="mini">超时完成</el-button>
+                        <!-- <el-button v-if="row.status === 0" type="primary" size="mini"
                             @click="viewOrderInfo(row.id, 0)">查看</el-button>
-                        <el-button v-if="row.status === 1" type="success" size="mini"
+                        <el-button v-if="row.status === 0" type="danger" size="mini">下架</el-button>
+                        <el-button v-if="row.status === 1" type="primary" size="mini"
                             @click="viewOrderInfo(row.id, 1)">查看</el-button>
+                        <el-button v-if="row.status === 1" type="success" size="mini">上架</el-button> -->
                     </template>
 
                     <!-- 如果是 note 列，显示对应的订单备注 -->
@@ -37,7 +41,10 @@
 
                     <!-- 如果是 orderstatus 列，显示对应的订单状态 -->
                     <template v-else-if="column.prop === 'orderstatus'">
-                        {{ orderStatusMap[row.orderstatus] }}
+                        <el-tag v-if="row.orderstatus == 0">{{orderStatusMap[row.orderstatus]}}</el-tag>
+                        <el-tag v-if="row.orderstatus == 1" type="warning">{{orderStatusMap[row.orderstatus]}}</el-tag>
+                        <el-tag v-if="row.orderstatus == 2" type="success">{{orderStatusMap[row.orderstatus]}}</el-tag>
+                        <el-tag v-if="row.orderstatus == 3" type="danger">{{orderStatusMap[row.orderstatus]}}</el-tag>
                     </template>
 
                     <!-- 如果是 totalAmount 列，显示出带单位的价格 -->
@@ -194,13 +201,13 @@ export default {
                     label: '客户姓名',
                     component: 'el-input',
                     prop: 'name',
-                    props: { placeholder: '客户姓名', style: { width: this.formItemWidth }}
+                    props: { placeholder: '客户姓名', style: { width: this.formItemWidth } }
                 },
                 {
                     label: '订单编号',
                     component: 'el-input',
                     prop: 'order_id',
-                    props: { placeholder: '订单编号', style: { width: this.formItemWidth }}
+                    props: { placeholder: '订单编号', style: { width: this.formItemWidth } }
                 },
                 {
                     label: '订单状态',
@@ -209,7 +216,8 @@ export default {
                     props: {
                         placeholder: '订单状态',
                         clearable: true,
-                        style: { width: this.formItemWidth }},
+                        style: { width: this.formItemWidth }
+                    },
                     options: this.orderStatusMap
                 },
                 {
@@ -219,7 +227,8 @@ export default {
                     props: {
                         placeholder: '订单类型',
                         clearable: true,
-                        style: { width: this.formItemWidth }},
+                        style: { width: this.formItemWidth }
+                    },
                     options: this.orderTypeMap
                 },
                 {
@@ -229,7 +238,8 @@ export default {
                     props: {
                         placeholder: '取货方式',
                         clearable: true,
-                        style: { width: this.formItemWidth }},
+                        style: { width: this.formItemWidth }
+                    },
                     options: this.pickMethodMap
                 },
                 {
@@ -239,7 +249,8 @@ export default {
                     props: {
                         placeholder: '状态',
                         clearable: true,
-                        style: { width: this.formItemWidth }},
+                        style: { width: this.formItemWidth }
+                    },
                     options: this.statusMap // 依赖 statusMap
                 },
                 {
@@ -296,7 +307,7 @@ export default {
                 { label: '取货方式', prop: 'pickMethod' },
                 { label: '订单状态', prop: 'orderstatus' },
                 { label: '创建时间', prop: 'createdate' },
-                { label: '操作', prop: 'status' } // 插槽列
+                { label: '操作', prop: 'status' } 
             ],
             searchFrom: {
                 name: '',

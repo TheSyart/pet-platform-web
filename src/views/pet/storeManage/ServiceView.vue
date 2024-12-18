@@ -52,14 +52,19 @@
                 align="center">
                 <!-- 使用一个模板处理 status 和其他列 -->
                 <template #default="{ row }">
-                    <!-- 如果是 status 列，则渲染相应的按钮 -->
-                    <template v-if="column.prop === 'status'">
+
+                    <template v-if="column.label === '操作'">
                         <el-button v-if="row.status === 0" type="primary" size="mini"
                             @click="viewServiceInfo(row.id, 0)">编辑</el-button>
-                        <el-button v-if="row.status === 0" type="danger" size="mini">删除</el-button>
-                        <el-button v-if="row.status === 1" type="success" size="mini"
+                        <el-button v-if="row.status === 0" type="danger" size="mini">下架</el-button>
+                        <el-button v-if="row.status === 1" type="warning" size="mini"
                             @click="viewServiceInfo(row.id, 1)">查看</el-button>
-                        <el-button v-if="row.status === 1" type="warning" size="mini">上架</el-button>
+                        <el-button v-if="row.status === 1" type="success" size="mini">上架</el-button>
+                    </template>
+
+                    <template v-else-if="column.label === '状态'">
+                        <el-tag v-if="row.status == 0" type="success">上架中</el-tag>
+                        <el-tag v-if="row.status == 1" type="danger">下架中</el-tag>
                     </template>
 
                     <!-- 如果是 shoppingTypeId 列，显示对应的服务类型 -->
@@ -220,7 +225,8 @@ export default {
                 { label: '服务价格', prop: 'price' },
                 { label: '创建时间', prop: 'createdate' },
                 { label: '更新时间', prop: 'updatedate' },
-                { label: '操作', prop: 'status' } // 插槽列
+                { label: '状态', prop: 'status' },
+                { label: '操作', prop: 'status' }
             ],
             searchFrom: {
                 name: "",

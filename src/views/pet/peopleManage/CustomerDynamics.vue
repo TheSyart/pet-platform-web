@@ -9,17 +9,21 @@
             :header-cell-style="{ backgroundColor: '#f5f5f5', color: '#333' }" height="600px">
             <el-table-column v-for="column in columns" :key="column.prop" :label="column.label" :prop="column.prop"
                 align="center">
-
                 <template #default="{ row }">
 
-                    <template v-if="column.prop === 'status'">
+                    <template v-if="column.label === '操作'">
                         <el-button v-if="row.status === 0" type="primary" size="mini"
-                            @click="viewDynamicsInfo(row.id, 0)">编辑</el-button>
+                            @click="viewDynamicsInfo(row.id, 0)">查看</el-button>
                         <el-button v-if="row.status === 0" type="danger" size="mini">删除</el-button>
-                        <el-button v-if="row.status === 1" type="success" size="mini"
+                        <el-button v-if="row.status === 1" type="warning" size="mini"
                             @click="viewDynamicsInfo(row.id, 1)">查看</el-button>
+                        <el-button v-if="row.status === 1" type="success" size="mini">恢复</el-button>
                     </template>
 
+                    <template v-else-if="column.label === '状态'">
+                        <el-tag v-if="row.status == 0" type="success">已发布</el-tag>
+                        <el-tag v-if="row.status == 1" type="danger">已删除</el-tag>
+                    </template>
 
                     <template v-else>
                         {{ row[column.prop] }}
@@ -39,8 +43,8 @@
                         <el-input v-model="OneDynamics.likeCount" autocomplete="off" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="动态内容:" :label-width="formLabelWidth">
-                        <el-input v-model="OneDynamics.content" style="resize: none;" autocomplete="off"
-                            type="textarea" :rows="3" disabled>
+                        <el-input v-model="OneDynamics.content" style="resize: none;" autocomplete="off" type="textarea"
+                            :rows="3" disabled>
                         </el-input>
                     </el-form-item>
                     <el-form-item label="具体点赞人:" :label-width="formLabelWidth">
@@ -146,6 +150,7 @@ export default {
                 { label: '点赞人数', prop: 'likeCount' },
                 { label: '动态发布日期', prop: 'sendtime' },
                 { label: '最后修改日期', prop: 'updateDate' },
+                { label: '状态', prop: 'status' },
                 { label: '操作', prop: 'status' }
             ],
             searchFrom: {

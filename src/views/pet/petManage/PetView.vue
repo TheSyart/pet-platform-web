@@ -19,13 +19,19 @@
                 align="center">
                 <!-- 使用一个模板处理 status 和其他列 -->
                 <template #default="{ row }">
-                    <!-- 如果是 status 列，则渲染相应的按钮 -->
-                    <template v-if="column.prop === 'status'">
+
+                    <template v-if="column.label === '操作'">
                         <el-button v-if="row.status === 0" type="primary" size="mini"
-                        @click="viewPetInfo(row.id, 0)">编辑</el-button>
-                    <el-button v-if="row.status === 0" type="danger" size="mini">删除</el-button>
-                    <el-button v-if="row.status === 1" type="success" size="mini"
-                        @click="viewPetInfo(row.id, 1)">查看</el-button>
+                            @click="viewPetInfo(row.id, 0)">查看</el-button>
+                        <el-button v-if="row.status === 0" type="danger" size="mini">删除</el-button>
+                        <el-button v-if="row.status === 1" type="warning" size="mini"
+                            @click="viewPetInfo(row.id, 1)">查看</el-button>
+                        <el-button v-if="row.status === 1" type="success" size="mini">恢复</el-button>
+                    </template>
+
+                    <template v-else-if="column.label === '状态'">
+                        <el-tag v-if="row.status == 0" type="success">正常</el-tag>
+                        <el-tag v-if="row.status == 1" type="danger">删除</el-tag>
                     </template>
 
                     <!-- 如果是 pet_breed 列，显示对应的宠物品种 -->
@@ -171,7 +177,8 @@ export default {
                     prop: 'petName',
                     props: {
                         placeholder: '宠物姓名',
-                        style: { width: this.formItemWidth }}
+                        style: { width: this.formItemWidth }
+                    }
                 },
                 {
                     label: '主人姓名',
@@ -179,7 +186,8 @@ export default {
                     prop: 'userName',
                     props: {
                         placeholder: '主人姓名',
-                        style: { width: this.formItemWidth }}
+                        style: { width: this.formItemWidth }
+                    }
                 },
                 {
                     label: '宠物品种',
@@ -188,7 +196,8 @@ export default {
                     props: {
                         placeholder: '宠物品种',
                         clearable: true,
-                        style: { width: this.formItemWidth }},
+                        style: { width: this.formItemWidth }
+                    },
                     options: this.breedsMap // 依赖 breedsMap
                 },
                 {
@@ -198,7 +207,8 @@ export default {
                     props: {
                         placeholder: '状态',
                         clearable: true,
-                        style: { width: this.formItemWidth }},
+                        style: { width: this.formItemWidth }
+                    },
                     options: this.status // 依赖 status
                 },
                 {
@@ -230,10 +240,11 @@ export default {
                 { label: '宠物姓名', prop: 'pet_name' },
                 { label: '宠物品种', prop: 'pet_breed' },
                 { label: '性别', prop: 'pet_sex' },
-                { label: '宠物备注', prop: 'pet_details'},
+                { label: '宠物备注', prop: 'pet_details' },
                 { label: '主人姓名', prop: 'name' },
                 { label: '注册日期', prop: 'createDate' },
                 { label: '最后修改日期', prop: 'modifyDate' },
+                { label: '状态', prop: 'status' },
                 { label: '操作', prop: 'status' }
             ],
             searchFrom: {

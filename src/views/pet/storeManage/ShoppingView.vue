@@ -48,7 +48,7 @@
                 <el-button type="primary" @click="addNewShopping">确 定</el-button>
             </div>
         </el-dialog>
-      
+
         <!-- 表格 -->
         <el-table class="table-container" :data="tableData" border align="center" header-align="center"
             :header-cell-style="{ backgroundColor: '#f5f5f5', color: '#333' }" height="600px">
@@ -57,14 +57,19 @@
 
                 <!-- 使用一个模板处理 status 和其他列 -->
                 <template #default="{ row }">
-                    <!-- 如果是 status 列，则渲染相应的按钮 -->
-                    <template v-if="column.prop === 'status'">
+
+                    <template v-if="column.label === '操作'">
                         <el-button v-if="row.status === 0" type="primary" size="mini"
                             @click="viewShoppingInfo(row.id, 0)">编辑</el-button>
-                        <el-button v-if="row.status === 0" type="danger" size="mini">删除</el-button>
-                        <el-button v-if="row.status === 1" type="success" size="mini"
+                        <el-button v-if="row.status === 0" type="danger" size="mini">下架</el-button>
+                        <el-button v-if="row.status === 1" type="warning" size="mini"
                             @click="viewShoppingInfo(row.id, 1)">查看</el-button>
-                        <el-button v-if="row.status === 1" type="warning" size="mini">上架</el-button>
+                        <el-button v-if="row.status === 1" type="success" size="mini">上架</el-button>
+                    </template>
+
+                    <template v-else-if="column.label === '状态'">
+                        <el-tag v-if="row.status == 0" type="success">上架中</el-tag>
+                        <el-tag v-if="row.status == 1" type="danger">下架中</el-tag>
                     </template>
 
                     <!-- 如果是 shoppingTypeId 列，显示对应的服务类型 -->
@@ -76,7 +81,6 @@
                     <template v-else-if="column.prop === 'price'">
                         {{ row.price | formatPrice }}
                     </template>
-
                     <!-- 默认渲染其他列的值 -->
                     <template v-else>
                         {{ row[column.prop] }}
@@ -100,7 +104,8 @@
                         </div>
                     </el-form-item>
                     <el-form-item label="商品库存:" :label-width="formLabelWidth">
-                        <el-input v-model="OneShopping.stock" autocomplete="off" disabled></el-input>
+                        <el-input-number v-model="OneShopping.stock" :step="1" :min="0" :max="9999"
+                            disabled></el-input-number>
                     </el-form-item>
                     <el-form-item label="商品类别:" :label-width="formLabelWidth">
                         <el-select v-model="shoppingTypeLabel" disabled>
@@ -180,7 +185,7 @@ export default {
                     label: '商品名称',
                     component: 'el-input',
                     prop: 'name',
-                    props: { placeholder: '商品名称', style: { width: this.formItemWidth }}
+                    props: { placeholder: '商品名称', style: { width: this.formItemWidth } }
                 },
                 {
                     label: '商品种类',
@@ -189,7 +194,8 @@ export default {
                     props: {
                         placeholder: '商品种类',
                         clearable: true,
-                        style: { width: this.formItemWidth }},
+                        style: { width: this.formItemWidth }
+                    },
                     options: this.shoppingTypeMap // 依赖 shoppingTypeMap
                 },
                 {
@@ -199,7 +205,8 @@ export default {
                     props: {
                         placeholder: '状态',
                         clearable: true,
-                        style: { width: this.formItemWidth }},
+                        style: { width: this.formItemWidth }
+                    },
                     options: this.statusMap // 依赖 statusMap
                 },
                 {
@@ -232,7 +239,8 @@ export default {
                 { label: '商品价格', prop: 'price' },
                 { label: '注册日期', prop: 'createDate' },
                 { label: '最后修改日期', prop: 'updateDate' },
-                { label: '操作', prop: 'status' } // 插槽列
+                { label: '状态', prop: 'status' },
+                { label: '操作', prop: 'status' } 
             ],
 
             searchFrom: {

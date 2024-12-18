@@ -11,14 +11,25 @@
                 align="center">
                 <!-- 使用一个模板处理 status 和其他列 -->
                 <template #default="{ row }">
-                    <!-- 如果是 status 列，则渲染相应的按钮 -->
-                    <template v-if="column.prop === 'status'">
-                        <el-button v-if="row.status === 0" type="primary" size="mini"
+
+                    <template v-if="column.label === '操作'">
+                        <el-button v-if="row.status === 0 || row.status === 1" type="primary" size="mini"
                             @click="viewCustomerInfo(row.id, 0)">编辑</el-button>
-                        <el-button v-if="row.status === 0" type="danger" size="mini">删除</el-button>
-                        <el-button v-if="row.status === 1" type="success" size="mini"
+                        <el-button v-if="row.status === 2" type="warning" size="mini"
                             @click="viewCustomerInfo(row.id, 1)">查看</el-button>
+
+                        <el-button v-if="row.status === 0" type="info" size="mini">封禁</el-button>
+                        
+                        <el-button v-if="row.status === 1" type="success" size="mini">解封</el-button>
+                        <el-button v-if="row.status === 1" type="danger" size="mini">删除</el-button>
                     </template>
+
+                    <template v-else-if="column.label === '状态'">
+                        <el-tag v-if="row.status == 0" type="success">{{ statusMap[row.status] }}</el-tag>
+                        <el-tag v-if="row.status == 1" type="warning">{{ statusMap[row.status] }}</el-tag>
+                        <el-tag v-if="row.status == 2" type="danger">{{ statusMap[row.status] }}</el-tag>
+                    </template>
+
 
                     <!-- 如果是 gender 列，显示对应的服务类型 -->
                     <template v-else-if="column.prop === 'gender'">
@@ -103,7 +114,7 @@
 <script>
 import axios from 'axios';
 import SearchFrom from '../../Component/SearchFrom.vue';
-import CommonData from '../../Component/CommonData.js'; 
+import CommonData from '../../Component/CommonData.js';
 export default {
     components: {
         SearchFrom
@@ -121,7 +132,7 @@ export default {
                     label: '姓名',
                     component: 'el-input',
                     prop: 'name',
-                    props: { placeholder: '姓名',  style: { width: this.formItemWidth }}
+                    props: { placeholder: '姓名', style: { width: this.formItemWidth } }
                 },
                 {
                     label: '性别',
@@ -130,7 +141,8 @@ export default {
                     props: {
                         placeholder: '性别',
                         clearable: true,
-                        style: { width: this.formItemWidth }},
+                        style: { width: this.formItemWidth }
+                    },
                     options: this.genderMap
                 },
                 {
@@ -140,7 +152,8 @@ export default {
                     props: {
                         placeholder: '状态',
                         clearable: true,
-                        style: { width: this.formItemWidth }},
+                        style: { width: this.formItemWidth }
+                    },
                     options: this.statusMap
                 },
                 {
@@ -172,6 +185,7 @@ export default {
                 { label: '生日', prop: 'birth' },
                 { label: '注册日期', prop: 'createdate' },
                 { label: '最后修改日期', prop: 'modifydate' },
+                { label: '状态', prop: '' },
                 { label: '操作', prop: 'status' }
             ],
             searchFrom: {
@@ -254,7 +268,7 @@ export default {
                 }
             }).then((result) => {
                 this.genderMap = this.gender;
-                this.statusMap = this.status;
+                this.statusMap = this.customerStatus;
                 this.tableData = result.data.data.list;
                 this.total = result.data.data.total;
             })
