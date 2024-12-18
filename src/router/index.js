@@ -59,6 +59,12 @@ const routes = [
         meta: { requiresAuth: true, permission: ['encyclopediaPage'] }
       },
       {
+        path: '/skill',
+        name: 'skill',
+        component: () => import('../views/pet/petManage/SkillView.vue'),
+        meta: { requiresAuth: true, permission: ['skillPage'] }
+      },
+      {
         path: '/shopping',
         name: 'shopping',
         component: () => import('../views/pet/storeManage/ShoppingView.vue'),
@@ -93,6 +99,7 @@ const router = new VueRouter({
   mode: 'history',  // 设置模式为 history
   routes,           // 将routes传递给VueRouter
 });
+
 
 // 路由守卫
 router.beforeEach((to, from, next) => {

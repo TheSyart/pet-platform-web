@@ -69,12 +69,9 @@
                             <router-link to="/encyclopedia" tag="div" style="text-decoration: none;">
                                 <el-menu-item index="3-2" v-if="hasPermission('encyclopediaPage')">宠物百科</el-menu-item>
                             </router-link>
-                            <!-- <router-link to="/emp" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="3-3" v-if="hasPermission('empPage')">宠物百科</el-menu-item>
+                            <router-link to="/skill" tag="div" style="text-decoration: none;">
+                                <el-menu-item index="3-3" v-if="hasPermission('skillPage')">喂养技巧</el-menu-item>
                             </router-link>
-                            <router-link to="/emp" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="3-4" v-if="hasPermission('empPage')">宠物喂养</el-menu-item>
-                            </router-link> -->
                         </el-menu-item-group>
 
                     </el-submenu>
