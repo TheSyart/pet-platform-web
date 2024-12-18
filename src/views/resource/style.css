@@ -1,0 +1,52 @@
+.background-container {
+  background-image: url('@/views/resource/grass_bg.jpg');
+  background-size: cover; /* 图片填充容器，保持比例裁剪 */
+  background-position: center; /* 居中对齐，防止显示偏移 */
+  background-repeat: no-repeat;
+  position: fixed;
+  /* 固定背景，不随内容滚动 */
+  top: 0;
+  left: 0;
+  height: 100vh; /* 高度设置为视口高度 */
+  width: 100%; /* 宽度设置为 100% */
+  z-index: -1; /* 使背景位于内容下方 */
+  overflow: hidden;
+}
+
+
+.login-box {
+  background-color: rgba(255, 255, 255, 0.9); /* 设置透明度 */
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* 增加阴影效果 */
+  padding: 45px; /* 增加内边距 */
+  width: 100%;
+  max-width: 400px; /* 设置最大宽度 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+html,
+body {
+  overflow: hidden;
+}
+
+.platFrom-container {
+  height: 100vh;
+}
+
+.table-container {
+  /* 内容超出时显示滚动条 */
+  border: 1px solid #dcdfe6;
+  /* 可选：边框样式 */
+  border-radius: 10px;
+  /* 可选：边框圆角 */
+}
+
+.box-card{
+  flex: 1; 
+  margin: 5px; 
+  width: 33%;
+}
