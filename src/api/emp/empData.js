@@ -77,7 +77,7 @@ export const columns = [
     prop: '',
     type: 'tag',
     details: [
-      { name: ['在职', '停职', '离职'], color: ["success", "warning", "danger"] }
+      { name: empStatus, color: ["success", "warning", "danger"] }
     ]
   },
   {

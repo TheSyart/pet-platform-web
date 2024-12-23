@@ -65,7 +65,7 @@ export default {
         status: ''
       },
       searchForm: {   //searchForm组件的数据载体
-        entrydate: "",
+        entrydate: [],
         name: "",
         gender: "",
         begin: '',

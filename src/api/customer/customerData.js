@@ -32,7 +32,7 @@ export const SearchFormItems = [
   {
     label: '入职日期',
     component: 'el-date-picker',
-    prop: 'createdate',
+    prop: 'dateRange',
     props: {
       type: 'datetimerange',
       rangeSeparator: '至',
@@ -60,7 +60,7 @@ export const columns = [
     prop: '',
     type: 'tag',
     details: [
-      { name: ['正常', '封禁', '删除'], color: ["success", "warning", "danger"] }
+      { name: customerStatus, color: ["success", "warning", "danger"] }
     ]
   },
   {
@@ -71,7 +71,7 @@ export const columns = [
       { value: 0, name: '编辑', color: 'primary', type: 'update' },
       { value: 0, name: '封禁', color: 'warning', type: 1 },
       { value: 1, name: '编辑', color: 'primary', type: 'update' },
-      { value: 1, name: '删除', color: 'warning', type: 2 },
+      { value: 1, name: '删除', color: 'danger', type: 2 },
       { value: 1, name: '解禁', color: 'success', type: 0 },
       { value: 2, name: '查看', color: 'warning', type: 'view' }
     ]

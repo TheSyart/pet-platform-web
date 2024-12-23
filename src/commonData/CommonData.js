@@ -17,6 +17,12 @@ export const customerStatus = [
   '删除'
 ];
 
+export const dynamicsStatus = [
+  '发布',
+  '封禁',
+  '删除'
+];
+
 export default {
   salutation: [
     '先生',

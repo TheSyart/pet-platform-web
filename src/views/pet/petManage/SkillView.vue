@@ -5,20 +5,18 @@
 
     <el-button type="primary" size="small" plain round style="height:30px; visibility: hidden">新增</el-button>
 
-    <CommonFormDialog title="客户信息" :status="CommonFormButtonStatus" :visible.sync="dialogVisible"
-      :formItems="CommonFormDialogItems" :formData="OneObject" formLabelWidth="100px" @close="clearOneInfoForm"
-      @confirm="handleViewConfirm" :fetchUpdate="updateCustomer" />
+    <CommonFormDialog title="动态信息" :status="CommonFormButtonStatus" :visible.sync="dialogVisible"
+      :formItems="CommonFormDialogItems" :formData="OneObject" formLabelWidth="100px" @close="clearOneInfoForm"/>
 
 
     <TablePagination :columns="columns" :conditions="conditions" @fetch-single-data="handleSingleData"
-      @updateStatus="updateStatus" :fetchAllInfo="pageQueryCustomer" />
+      @updateStatus="updateStatus" :fetchAllInfo="pageQueryDynamics" />
   </el-main>
 </template>
 
 <script>
-import { fetchData } from '@/api/common/dataFetcher';
-import { SearchFormItems, columns, CommonFormDialogItems } from '@/api/customer/customerData';
-import { pageQueryCustomer, queryOneCustomer, updateCustomerStatus, updateCustomer, deleteCustomer } from '@/api/customer/customerApi';
+import { SearchFormItems, columns, CommonFormDialogItems } from '@/api/dynamics/dynamicsData';
+import { pageQueryDynamics, queryOneDynamics, updateDynamicsStatus } from '@/api/dynamics/dynamicsApi';
 import { Message } from 'element-ui'; // 使用 Element UI 的消息提示
 import SearchForm from '@/components/SearchForm.vue';
 import CommonFormDialog from "@/components/CommonFormDialog.vue";
@@ -43,10 +41,8 @@ export default {
   watch: {    //监听查询单个的值，返回给CommonFormDialogItems下的一些值
     OneObject(newValue) {
       this.CommonFormDialogItems.forEach(item => {
-        if (item.prop === 'image') {
-          item.props.imageUrl = newValue.image;
-          item.props.id = newValue.id;
-          item.props.fetchDelete = deleteCustomer;
+        if (item.prop === 'image_path') {
+          item.props.imageUrl = newValue.image_path;
         }
       });
     }
@@ -58,24 +54,20 @@ export default {
       OneObject: {  // 查询单条数据的载体
         id: "",
         name: "",
-        gender: "",
-        phone: "",
-        birth: "",
-        username: "",
-        password: "",
-        image: "",
+        likeCount: "",
+        content: "",
+        likepeople: "",
+        image_path: ""
       },
       conditions: {   //分页查询请求体
         name: '',
-        gender: '',
         begin: '',
         end: '',
         status: ''
       },
       searchForm: {   //searchForm组件的数据载体
-        entrydate: "",
+        dateRange: [],
         name: "",
-        gender: "",
         begin: '',
         end: '',
         status: ""
@@ -91,7 +83,7 @@ export default {
     },
     resetSearchForm() {
       this.searchForm = {
-        entrydate: "",
+        dateRange: [],
         name: "",
         gender: "",
         begin: '',
@@ -105,15 +97,15 @@ export default {
     onSubmit(formData) {
       this.searchForm.entrydate = formData.entrydate; //回显选择时间
       //时间选择器自带的 X ，点击后会让值为null
-      if (formData.entrydate == null) {
-        formData.entrydate = [];
+      if (formData.dateRange == null) {
+        formData.dateRange = [];
       }
       this.searchForm.name = formData.name;
       this.searchForm.gender = formData.gender;
 
       this.searchForm.status = formData.status;
-      this.searchForm.begin = formData.entrydate[0] ? this.$formatDateTime(formData.entrydate[0]) : '';
-      this.searchForm.end = formData.entrydate[1] ? this.$formatDateTime(formData.entrydate[1]) : '';
+      this.searchForm.begin = formData.dateRange[0] ? this.$formatDateTime(formData.dateRange[0]) : '';
+      this.searchForm.end = formData.dateRange[1] ? this.$formatDateTime(formData.dateRange[1]) : '';
 
       this.updateConditions();
     },
@@ -139,20 +131,12 @@ export default {
       },
         this.dialogVisible = false;
     },
-    // 确认时的操作
-    handleViewConfirm(formData) {
-      console.log("commonFormDialog确认操作触发数据:", JSON.stringify(formData));
-      this.clearOneInfoForm();
-      this.resetSearchForm();
-    },
 
     ////////////该界面所用api函数 //////////////////////////////////////////////////////////////////////////
-    pageQueryCustomer,
-    updateCustomer,
-    deleteCustomer,
+    pageQueryDynamics,
     async fetchOneInfo(id) {
       try {
-        const response = await queryOneCustomer(id);
+        const response = await queryOneDynamics(id);
         this.OneObject = { ...response.data };
         //获得值打开对话框
         this.dialogVisible = true;
@@ -167,38 +151,14 @@ export default {
           id: id,
           status: status
         };
-        const response = await updateCustomerStatus(data);
+        const response = await updateDynamicsStatus(data);
         //清空数据,重新加载数据
         this.resetSearchForm();
         Message.success(response.data);   //提示成功
       } catch (error) {
         console.error('员工状态操作失败:', error);
       }
-    },
-    async fetchJobOptions() {
-      try {
-        const jobData = await fetchData('empJob');
-        this.jobMap = jobData;
-        this.SearchFormItems.forEach(item => {
-          if (item.prop === 'job') {
-            item.options = this.jobMap;
-          }
-        });
-        this.columns.forEach((item) => {
-          if (item.prop === 'job') {
-            item.details = this.jobMap;
-          }
-        });
-
-      } catch (error) {
-        console.error('Failed to fetch job options:', error);
-        Message.error('职位数据获取失败，请重试');
-      }
     }
-  },
-  created() {
-    this.fetchJobOptions();
-    console.log(this.CommonFormDialogItems);
   }
 };
 </script>

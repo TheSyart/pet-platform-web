@@ -73,7 +73,7 @@
           status: ''
         },
         searchForm: {   //searchForm组件的数据载体
-          entrydate: "",
+          dateRange: [],
           name: "",
           gender: "",
           begin: '',
@@ -91,7 +91,7 @@
       },
       resetSearchForm() {
         this.searchForm = {
-          entrydate: "",
+          dateRange: [],
           name: "",
           gender: "",
           begin: '',
@@ -103,17 +103,17 @@
       },
       /////////////分页查询函数///////////////////////////////////////////////////////////////////////////////
       onSubmit(formData) {
-        this.searchForm.entrydate = formData.entrydate; //回显选择时间
+        this.searchForm.dateRange = formData.dateRange; //回显选择时间
         //时间选择器自带的 X ，点击后会让值为null
-        if (formData.entrydate == null) {
-          formData.entrydate = [];
+        if (formData.dateRange == null) {
+          formData.dateRange = [];
         }
         this.searchForm.name = formData.name;
         this.searchForm.gender = formData.gender;
   
         this.searchForm.status = formData.status;
-        this.searchForm.begin = formData.entrydate[0] ? this.$formatDateTime(formData.entrydate[0]) : '';
-        this.searchForm.end = formData.entrydate[1] ? this.$formatDateTime(formData.entrydate[1]) : '';
+        this.searchForm.begin = formData.dateRange[0] ? this.$formatDateTime(formData.dateRange[0]) : '';
+        this.searchForm.end = formData.dateRange[1] ? this.$formatDateTime(formData.dateRange[1]) : '';
   
         this.updateConditions();
       },

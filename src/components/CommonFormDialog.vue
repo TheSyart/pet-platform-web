@@ -63,7 +63,8 @@ export default {
         },
         fetchUpdate: {
             type: Function,
-            required: true,
+            default: () => {
+            }
         },
     },
     data() {
