@@ -10,6 +10,7 @@ import * as echarts from 'echarts/core';
 import { BarChart, LineChart } from 'echarts/charts';
 import { TitleComponent, TooltipComponent, GridComponent,LegendComponent, ToolboxComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
+import store from './store';
 
 
 Vue.filter('formatPrice', function(price) {
@@ -50,6 +51,7 @@ Vue.use(ElementUI);
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')
 

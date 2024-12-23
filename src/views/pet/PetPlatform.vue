@@ -129,7 +129,6 @@
 
 <script>
 import axios from 'axios';
-
 export default {
     data() {
         return {
@@ -152,9 +151,9 @@ export default {
             }
         },
         loginBack() {
-            localStorage.removeItem('jwt');
-            localStorage.removeItem('role');
-            localStorage.removeItem('permission');
+            // 清除本地存储
+            localStorage.clear();
+
             this.name = ''; // 清空名字
             this.$router.push('/login');
         },

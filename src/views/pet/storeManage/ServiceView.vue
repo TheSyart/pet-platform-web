@@ -3,7 +3,7 @@
         <!-- 使用 DataFetcher 组件获取商品所有种类数据 -->
         <DataFetcher dataType="petService" @data-fetched="handlePetServiceData" />
         <!-- 表单 -->
-        <SearchFrom :searchFrom="searchFrom" :formItems="formItems" @submit="onSubmit" />
+        <SearchForm :searchForm="searchForm" :formItems="formItems" @submit="onSubmit" />
 
         <!-- 新增服务对话框 -->
         <el-button type="primary" size="small" plain round @click="dialogFormVisible = true"
@@ -152,15 +152,15 @@
 
 <script>
 import axios from 'axios';
-import SearchFrom from '../../Component/SearchFrom.vue';
-import ImgUploader from '../../Component/ImgUploader.vue';
-import DataFetcher from '../../Component/DataFetcher.vue';
-import CommonData from '../../Component/CommonData.js'; // 导入 CommonData 数据文件
+import SearchForm from '../../../components/SearchForm.vue';
+import ImgUploader from '../../../components/ImgUploader.vue';
+import DataFetcher from '../../../components/DataFetcher.vue';
+import CommonData from '../../../commonData/CommonData.js'; // 导入 CommonData 数据文件
 export default {
     components: {
         DataFetcher,
         ImgUploader,
-        SearchFrom,
+        SearchForm,
     },
     computed: {
         petServiceLabel() {
@@ -228,7 +228,7 @@ export default {
                 { label: '状态', prop: 'status' },
                 { label: '操作', prop: 'status' }
             ],
-            searchFrom: {
+            searchForm: {
                 name: "",
                 shoppingTypeId: "",
                 status: "",
@@ -294,7 +294,7 @@ export default {
             });
         },
         onSubmit(formData) {
-            this.searchFrom = formData;
+            this.searchForm = formData;
             this.getServiceInformation();
         },
         handleSizeChange(newSize) {
@@ -308,16 +308,16 @@ export default {
         },
         getServiceInformation() {
             //时间选择器自带的 X ，点击后会让值为null
-            if (this.searchFrom.createdate == null) {
-                this.searchFrom.createdate = [];
+            if (this.searchForm.createdate == null) {
+                this.searchForm.createdate = [];
             }
             const page = this.currentPage;
             const size = this.pageSize;
-            const name = this.searchFrom.name;
-            const shoppingTypeId = this.searchFrom.shoppingTypeId;
-            const status = this.searchFrom.status;
-            const begin = this.searchFrom.createdate[0] ? this.$formatDateTime(this.searchFrom.createdate[0]) : '';
-            const end = this.searchFrom.createdate[1] ? this.$formatDateTime(this.searchFrom.createdate[1]) : '';
+            const name = this.searchForm.name;
+            const shoppingTypeId = this.searchForm.shoppingTypeId;
+            const status = this.searchForm.status;
+            const begin = this.searchForm.createdate[0] ? this.$formatDateTime(this.searchForm.createdate[0]) : '';
+            const end = this.searchForm.createdate[1] ? this.$formatDateTime(this.searchForm.createdate[1]) : '';
 
             axios.post("/api/petService/queryAllService", {
                 conditions: {

@@ -3,7 +3,7 @@
         <!-- 使用 DataFetcher 组件获取数据 -->
         <DataFetcher dataType="petBreeds" @data-fetched="handlePetBreedsData" />
         <!-- 表单 -->
-        <SearchFrom :searchFrom="searchFrom" :formItems="formItems" @submit="onSubmit" />
+        <SearchForm :searchForm="searchForm" :formItems="formItems" @submit="onSubmit" />
 
 
         <!-- 新增百科对话框 -->
@@ -202,13 +202,13 @@
 
 <script>
 import axios from 'axios';
-import SearchFrom from '../../Component/SearchFrom.vue';
-import ImgUploader from '../../Component/ImgUploader.vue';
-import DataFetcher from '../../Component/DataFetcher.vue';
-import CommonData from '../../Component/CommonData.js'; // 导入 CommonData 数据文件
+import SearchForm from '../../../components/SearchForm.vue';
+import ImgUploader from '../../../components/ImgUploader.vue';
+import DataFetcher from '../../../components/DataFetcher.vue';
+import CommonData from '../../../commonData/CommonData.js'; // 导入 CommonData 数据文件
 export default {
     components: {
-        SearchFrom,
+        SearchForm,
         DataFetcher,
         ImgUploader
     },
@@ -272,7 +272,7 @@ export default {
 
             ],
 
-            searchFrom: {
+            searchForm: {
                 petName: "",
                 petSpecies: "",
                 status: ""
@@ -346,7 +346,7 @@ export default {
             this.form.image_path = responseData;
         },
         onSubmit(formData) {
-            this.searchFrom = formData;
+            this.searchForm = formData;
             this.getEncyclopediaInformation();
         },
         handleSizeChange(newSize) {
@@ -361,9 +361,9 @@ export default {
         getEncyclopediaInformation() {
             const page = this.currentPage;
             const size = this.pageSize;
-            const petName = this.searchFrom.petName;
-            const petSpecies = this.searchFrom.petSpecies;
-            const status = this.searchFrom.status;
+            const petName = this.searchForm.petName;
+            const petSpecies = this.searchForm.petSpecies;
+            const status = this.searchForm.status;
 
 
             axios.post("/api/encyclopedia/queryAllEncyclopedia", {

@@ -107,8 +107,8 @@
 
 <script>
 import axios from 'axios';
-import CommonData from '../../Component/CommonData.js';
-import EChart from '../../Component/EChart.vue';
+import CommonData from '../../../commonData/CommonData.js';
+import EChart from '../../../components/EChart.vue';
 export default {
   components: {
     EChart
@@ -260,7 +260,7 @@ export default {
     },
 
     onSubmit(formData) {
-      this.searchFrom = formData;
+      this.searchForm = formData;
       this.getInformation();
     },
     handleSizeChange(newSize) {

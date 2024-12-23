@@ -42,12 +42,9 @@ export default {
   },
   methods: {
     login() {
-     
-
-      //先移除缓存jwt,role,permission
-      localStorage.removeItem('jwt');
-      localStorage.removeItem('role');
-      localStorage.removeItem('permission');
+      
+      // 清除本地存储
+      localStorage.clear();
 
       const username = this.username;
       const password = this.password;

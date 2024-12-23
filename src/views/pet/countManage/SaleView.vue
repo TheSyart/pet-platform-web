@@ -46,9 +46,9 @@
 
 <script>
 import axios from 'axios';
-import DataFetcher from '../../Component/DataFetcher.vue';
-import CommonData from '../../Component/CommonData.js';
-import EChart from '../../Component/EChart.vue';
+import DataFetcher from '../../../components/DataFetcher.vue';
+import CommonData from '../../../commonData/CommonData.js';
+import EChart from '../../../components/EChart.vue';
 export default {
   components: {
     EChart,
@@ -360,7 +360,7 @@ export default {
       this.getInformation();
     },
     onSubmit(formData) {
-      this.searchFrom = formData;
+      this.searchForm = formData;
       this.getInformation();
     },
     handleSizeChange(newSize) {

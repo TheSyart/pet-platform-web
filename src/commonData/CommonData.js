@@ -1,16 +1,26 @@
+export const formItemWidth = '105px';
+
+export const gender = [
+  '男',
+  '女'
+];
+
+export const empStatus = [
+  '在职',
+  '停职',
+  '离职'
+];
+
+export const customerStatus = [
+  '正常',
+  '封禁',
+  '删除'
+];
+
 export default {
-  gender: [
-    '男',
-    '女'
-  ],
   salutation: [
     '先生',
     '女士'
-  ],
-  empStatus: [
-    '在职',
-    '停职',
-    '离职'
   ],
   customerStatus: [
     '正常',

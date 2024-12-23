@@ -8,7 +8,7 @@
         <DataFetcher dataType="petDetails" @data-fetched="handlePetDetailsData" />
 
         <!-- 表单 -->
-        <SearchFrom :searchFrom="searchFrom" :formItems="formItems" @submit="onSubmit" />
+        <SearchForm :searchForm="searchForm" :formItems="formItems" @submit="onSubmit" />
 
 
         <button style="height: 30px; visibility: hidden;"></button>
@@ -148,13 +148,13 @@
 
 <script>
 import axios from 'axios';
-import SearchFrom from '../../Component/SearchFrom.vue';
-import DataFetcher from '../../Component/DataFetcher.vue';
-import CommonData from '../../Component/CommonData.js'; // 导入 CommonData 数据文件
+import SearchForm from '../../../components/SearchForm.vue';
+import DataFetcher from '../../../components/DataFetcher.vue';
+import CommonData from '../../../commonData/CommonData.js'; // 导入 CommonData 数据文件
 export default {
     components: {
         DataFetcher,
-        SearchFrom
+        SearchForm
     },
     computed: {
         genderLabel() {
@@ -247,7 +247,7 @@ export default {
                 { label: '状态', prop: 'status' },
                 { label: '操作', prop: 'status' }
             ],
-            searchFrom: {
+            searchForm: {
                 petName: "",
                 userName: "",
                 gender: "",
@@ -296,7 +296,7 @@ export default {
             this.detailsMap = data; // 获取宠物详情
         },
         onSubmit(formData) {
-            this.searchFrom = formData;
+            this.searchForm = formData;
             this.getPetInformation();
         },
         handleSizeChange(newSize) {
@@ -310,18 +310,18 @@ export default {
         },
         getPetInformation() {
             //时间选择器自带的 X ，点击后会让值为null
-            if (this.searchFrom.createdate == null) {
-                this.searchFrom.createdate = [];
+            if (this.searchForm.createdate == null) {
+                this.searchForm.createdate = [];
             }
             const page = this.currentPage;
             const size = this.pageSize;
-            const petName = this.searchFrom.petName;
-            const userName = this.searchFrom.userName;
-            const gender = this.searchFrom.gender;
-            const status = this.searchFrom.status;
-            const petBreed = this.searchFrom.petBreed;
-            const begin = this.searchFrom.createdate[0] ? this.$formatDateTime(this.searchFrom.createdate[0]) : '';
-            const end = this.searchFrom.createdate[1] ? this.$formatDateTime(this.searchFrom.createdate[1]) : '';
+            const petName = this.searchForm.petName;
+            const userName = this.searchForm.userName;
+            const gender = this.searchForm.gender;
+            const status = this.searchForm.status;
+            const petBreed = this.searchForm.petBreed;
+            const begin = this.searchForm.createdate[0] ? this.$formatDateTime(this.searchForm.createdate[0]) : '';
+            const end = this.searchForm.createdate[1] ? this.$formatDateTime(this.searchForm.createdate[1]) : '';
 
 
             axios.post("/api/myPet/queryAllPet", {

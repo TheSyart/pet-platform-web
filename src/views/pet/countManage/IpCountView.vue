@@ -2,7 +2,7 @@
   <div class="main-content">
     <el-main style="display: flex; flex-direction: column;">
       <!-- 表单 -->
-      <SearchFrom :searchFrom="searchFrom" :formItems="formItems" @submit="onSubmit" />
+      <SearchForm :searchForm="searchForm" :formItems="formItems" @submit="onSubmit" />
       <!-- 图表 -->
       <div style="display: flex; flex: 1;">
         <el-card class="box-card" style="flex: 1; margin: 5px; width: 33%;">
@@ -77,14 +77,14 @@
 
 <script>
 import axios from 'axios';
-import SearchFrom from '../../Component/SearchFrom.vue';
-import CommonData from '../../Component/CommonData.js';
-import EChart from '../../Component/EChart.vue';
+import SearchForm from '../../../components/SearchForm.vue';
+import CommonData from '../../../commonData/CommonData.js';
+import EChart from '../../../components/EChart.vue';
 import moment from 'moment';
 export default {
   components: {
     EChart,
-    SearchFrom
+    SearchForm
   },
   computed: {
     formItems() {
@@ -263,7 +263,7 @@ export default {
         { label: '登录结果', prop: 'result' },
         { label: '登录方式', prop: 'login_type' }
       ],
-      searchFrom: {
+      searchForm: {
         username: "",
         ip: "",
         accountType: "",
@@ -278,7 +278,7 @@ export default {
 
   methods: {
     onSubmit(formData) {
-      this.searchFrom = formData;
+      this.searchForm = formData;
       this.getInformation();
     },
     handleSizeChange(newSize) {
@@ -365,17 +365,17 @@ export default {
     ,
     getInformation() {
       //时间选择器自带的 X ，点击后会让值为null
-      if (this.searchFrom.createdDate == null) {
-        this.searchFrom.createdDate = [];
+      if (this.searchForm.createdDate == null) {
+        this.searchForm.createdDate = [];
       }
 
       const page = this.currentPage;
       const size = this.pageSize;
-      const username = this.searchFrom.username;
-      const ip = this.searchFrom.ip;
-      const accountType = this.searchFrom.accountType;
-      const begin = this.searchFrom.createdDate[0] ? this.$formatDateTime(this.searchFrom.createdDate[0]) : '';
-      const end = this.searchFrom.createdDate[1] ? this.$formatDateTime(this.searchFrom.createdDate[1]) : '';
+      const username = this.searchForm.username;
+      const ip = this.searchForm.ip;
+      const accountType = this.searchForm.accountType;
+      const begin = this.searchForm.createdDate[0] ? this.$formatDateTime(this.searchForm.createdDate[0]) : '';
+      const end = this.searchForm.createdDate[1] ? this.$formatDateTime(this.searchForm.createdDate[1]) : '';
 
       axios.post("/api/ip/queryAllIpInfo", {
         conditions: {
