@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import store from '@/store';
 
 Vue.use(VueRouter);
 
@@ -100,11 +101,16 @@ const router = new VueRouter({
   routes,           // 将routes传递给VueRouter
 });
 
+function getGlobalVar() {
+  return store.getters.getGlobalVar; // 通过 Vuex 的 getter 获取
+}
+
 
 // 路由守卫
 router.beforeEach((to, from, next) => {
-  const jwt = localStorage.getItem('jwt');
-  const EmpPermission = JSON.parse(localStorage.getItem('permission')) || []; // 获取用户权限数组
+  const globalVar = getGlobalVar(); // 调用 getGlobalVar 函数获取全局变量
+  const jwt = globalVar.jwt;
+  const EmpPermission = globalVar.permission || []; // 获取用户权限数组
 
   if (jwt) {
     if (to.meta.requiresAuth !== undefined) {

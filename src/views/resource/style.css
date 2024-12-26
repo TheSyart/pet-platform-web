@@ -38,7 +38,6 @@ body {
 }
 
 .table-container {
-  /* 内容超出时显示滚动条 */
   border: 1px solid #dcdfe6;
   /* 可选：边框样式 */
   border-radius: 10px;

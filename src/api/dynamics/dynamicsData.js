@@ -1,4 +1,4 @@
-import { formItemWidth, dynamicsStatus } from '@/commonData/CommonData';
+import { formItemWidth, formItemMiddleWidth, dynamicsStatus } from '@/commonData/CommonData';
 
 export const SearchFormItems = [
   {
@@ -27,14 +27,14 @@ export const SearchFormItems = [
       rangeSeparator: '至',
       startPlaceholder: '开始日期',
       endPlaceholder: '结束日期',
-      style: 'width: 360px;'
+      style: { width: formItemMiddleWidth }
     }
   }
 ];
 
 export const columns = [
   { label: '发布人', prop: 'name' },
-  { 
+  {
     label: '点赞人数',
     prop: 'likeCount',
     type: 'unit',
@@ -54,23 +54,29 @@ export const columns = [
   },
   {
     label: '操作',
-    prop: 'status',
+    prop: '',
     type: 'button',
     details: [
-      { value: 0, name: '查看', color: 'primary', type: 'view' },
-      { value: 1, name: '查看', color: 'primary', type: 'view' },
-      { value: 2, name: '查看', color: 'primary', type: 'view' },
-      { value: 0, name: '封禁', color: 'warning', type: 1 },
-      { value: 1, name: '删除', color: 'danger', type: 2 },
-      { value: 1, name: '解禁', color: 'success', type: 0 },
+      { value: [0, 1, 2], name: '查看', color: 'primary', type: 'view' },
+      { value: [0], name: '封禁', color: 'warning', type: 1 },
+      { value: [1], name: '删除', color: 'danger', type: 2 },
+      { value: [1], name: '解禁', color: 'success', type: 0 },
     ]
   }
 ]
 export const CommonFormDialogItems = [
   { label: "发布人", prop: "name", type: "el-input", props: { autocomplete: "off", disabled: true }, edit: true, isDate: false },
   { label: "点赞人数", prop: "likeCount", type: "el-input", props: { autocomplete: "off", disabled: true }, edit: true, isDate: false },
-  { label: "动态内容", prop: "content", type: "el-input", props: { autocomplete: "off", disabled: true, type:"textarea", rows:"4" }, edit: false, isDate: false },
-  { label: "具体点赞人", prop: "likepeople", type: "el-input", props: { autocomplete: "off", disabled: true, type:"textarea", rows:"3" }, edit: false, isDate: false },
+  { label: "具体点赞人", prop: "likepeople", type: "el-input", props: { autocomplete: "off", disabled: true, type: "textarea", rows: "3" }, edit: false, isDate: false },
+  {
+    label: "动态内容",
+    prop: "content",
+    type: "el-input",
+    props: { autocomplete: "off", disabled: true, type: "textarea", rows: "4" },
+    edit: false,
+    isDate: false,
+    fullWidth: true
+  },
   {
     label: "动态图像",
     prop: "image_path",
@@ -82,6 +88,6 @@ export const CommonFormDialogItems = [
     },
     edit: true,
     isDate: false
-  }
+  },
 ];
 

@@ -22,9 +22,6 @@ export async function fetchData(dataType) {
     case 'petService':
       apiUrl = '/petService/allServiceType';
       break;
-    case 'petOrder':
-      apiUrl = '/petOrder/queryAllOrderType';
-      break;
     default:
       console.error('未知的数据类型');
       return [];

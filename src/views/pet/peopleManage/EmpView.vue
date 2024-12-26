@@ -46,15 +46,15 @@ export default {
       dialogVisible: false,
       addDialogVisible: false,
       OneObject: {  // 查询单条数据的载体
-        id: "",
-        name: "",
-        phone: "",
-        gender: "",
-        job: "",
-        birth: "",
-        username: "",
-        password: "",
-        image: "",
+        // id: "",
+        // name: "",
+        // phone: "",
+        // gender: "",
+        // job: "",
+        // birth: "",
+        // username: "",
+        // password: "",
+        // image: "",
       },
       conditions: {   //分页查询请求体
         name: '',
@@ -142,15 +142,15 @@ export default {
     // 关闭时和取消时清理表单
     clearOneInfoForm() {
       this.OneObject = {  // 查询单条数据的载体
-        id: "",
-        name: "",
-        phone: "",
-        gender: "",
-        job: "",
-        birth: "",
-        username: "",
-        password: "",
-        image: ""
+        // id: "",
+        // name: "",
+        // phone: "",
+        // gender: "",
+        // job: "",
+        // birth: "",
+        // username: "",
+        // password: "",
+        // image: ""
       },
         this.dialogVisible = false;
     },

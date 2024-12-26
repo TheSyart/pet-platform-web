@@ -16,26 +16,32 @@
             </el-dropdown>
         </el-header>
         <el-container style="height: 100%;">
-            <el-aside style="height: 100%; border: 1px solid #ccc;"> <!-- 添加边框 -->
-                <el-menu :default-openeds="openeds" style="height: 100%;" @open="handleOpen" @close="handleClose">
+            <el-aside style="height: 100%; width: 200px; border: 1px solid #ccc;"> <!-- 添加边框 -->
+                <el-menu :default-openeds="opened" style="height: 100%;" @open="handleOpen" @close="handleClose">
                     <!-- 营销统计管理 -->
                     <el-submenu index="1">
                         <template slot="title">
                             <i class="el-icon-data-line"></i>营销统计管理
                         </template>
                         <el-menu-item-group>
-                            <router-link to="/home" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="1-1">首页</el-menu-item>
+                            <router-link to="/home" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="1-1">首页</el-menu-item>
+                                </div>
                             </router-link>
                         </el-menu-item-group>
                         <el-menu-item-group>
-                            <router-link to="/ipCount" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="1-2" v-if="hasPermission('ipCountPage')">访问统计</el-menu-item>
+                            <router-link to="/ipCount" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="1-2" v-if="hasPermission('ipCountPage')">访问统计</el-menu-item>
+                                </div>
                             </router-link>
                         </el-menu-item-group>
                         <el-menu-item-group>
-                            <router-link to="/sale" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="1-3" v-if="hasPermission('salePage')">营销统计</el-menu-item>
+                            <router-link to="/sale" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="1-3" v-if="hasPermission('salePage')">营销统计</el-menu-item>
+                                </div>
                             </router-link>
                         </el-menu-item-group>
                     </el-submenu>
@@ -45,14 +51,20 @@
                             <i class="el-icon-s-custom"></i>人员信息管理
                         </template>
                         <el-menu-item-group>
-                            <router-link to="/emp" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="2-1" v-if="hasPermission('empPage')">员工信息</el-menu-item>
+                            <router-link to="/emp" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="2-1" v-if="hasPermission('empPage')">员工信息</el-menu-item>
+                                </div>
                             </router-link>
-                            <router-link to="/customer" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="2-2" v-if="hasPermission('customerPage')">客户信息</el-menu-item>
+                            <router-link to="/customer" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="2-2" v-if="hasPermission('customerPage')">客户信息</el-menu-item>
+                                </div>
                             </router-link>
-                            <router-link to="/dynamics" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="2-3" v-if="hasPermission('dynamicsPage')">客户动态</el-menu-item>
+                            <router-link to="/dynamics" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="2-3" v-if="hasPermission('dynamicsPage')">客户动态</el-menu-item>
+                                </div>
                             </router-link>
                         </el-menu-item-group>
                     </el-submenu>
@@ -63,17 +75,23 @@
                             <i class="el-icon-medal-1"></i>宠物信息管理
                         </template>
                         <el-menu-item-group>
-                            <router-link to="/pet" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="3-1" v-if="hasPermission('petPage')">宠物信息</el-menu-item>
+                            <router-link to="/pet" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="3-1" v-if="hasPermission('petPage')">宠物信息</el-menu-item>
+                                </div>
                             </router-link>
-                            <router-link to="/encyclopedia" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="3-2" v-if="hasPermission('encyclopediaPage')">宠物百科</el-menu-item>
+                            <router-link to="/encyclopedia" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="3-2"
+                                        v-if="hasPermission('encyclopediaPage')">宠物百科</el-menu-item>
+                                </div>
                             </router-link>
-                            <router-link to="/skill" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="3-3" v-if="hasPermission('skillPage')">喂养技巧</el-menu-item>
+                            <router-link to="/skill" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="3-3" v-if="hasPermission('skillPage')">喂养技巧</el-menu-item>
+                                </div>
                             </router-link>
                         </el-menu-item-group>
-
                     </el-submenu>
 
                     <!-- 商城服务管理 -->
@@ -82,14 +100,20 @@
                             <i class="el-icon-goods"></i>商城服务管理
                         </template>
                         <el-menu-item-group>
-                            <router-link to="/shopping" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="4-1" v-if="hasPermission('shoppingPage')">宠物商城</el-menu-item>
+                            <router-link to="/shopping" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="4-1" v-if="hasPermission('shoppingPage')">宠物商城</el-menu-item>
+                                </div>
                             </router-link>
-                            <router-link to="/service" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="4-2" v-if="hasPermission('servicePage')">宠物服务</el-menu-item>
+                            <router-link to="/service" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="4-2" v-if="hasPermission('servicePage')">宠物服务</el-menu-item>
+                                </div>
                             </router-link>
-                            <router-link to="/order" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="4-3" v-if="hasPermission('orderPage')">订单管理</el-menu-item>
+                            <router-link to="/order" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="4-3" v-if="hasPermission('orderPage')">订单管理</el-menu-item>
+                                </div>
                             </router-link>
                         </el-menu-item-group>
                     </el-submenu>
@@ -100,18 +124,26 @@
                             <i class="el-icon-setting"></i>系统信息管理
                         </template>
                         <el-menu-item-group>
-                            <!-- <router-link to="/pet" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="5-1" v-if="hasPermission('petPage')">权限监管</el-menu-item>
+                            <router-link to="/pet" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="5-1" v-if="hasPermission('petPage')">权限监管</el-menu-item>
+                                </div>
                             </router-link>
-                            <router-link to="/emp" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="5-2" v-if="hasPermission('empPage')">分类信息</el-menu-item>
+                            <router-link to="/emp" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="5-2" v-if="hasPermission('empPage')">分类信息</el-menu-item>
+                                </div>
                             </router-link>
-                            <router-link to="/emp" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="5-3" v-if="hasPermission('empPage')">用户登录</el-menu-item>
+                            <router-link to="/emp" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="5-3" v-if="hasPermission('empPage')">用户登录</el-menu-item>
+                                </div>
                             </router-link>
-                            <router-link to="/emp" tag="div" style="text-decoration: none;">
-                                <el-menu-item index="5-4" v-if="hasPermission('empPage')">员工登录</el-menu-item>
-                            </router-link> -->
+                            <router-link to="/emp" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="5-4" v-if="hasPermission('empPage')">员工登录</el-menu-item>
+                                </div>
+                            </router-link>
                         </el-menu-item-group>
                     </el-submenu>
                 </el-menu>
@@ -124,59 +156,40 @@
             </el-main>
         </el-container>
     </el-container>
-
 </template>
 
 <script>
-import axios from 'axios';
+import store from '@/store';
 export default {
     data() {
         return {
-            openeds: ['1'], // 默认展开第一个菜单
+            EmpPermission: [],
+            opened: ['1'], // 默认展开第一个菜单
             name: ''
         };
     },
     methods: {
         handleOpen(index) {
-            // 菜单项打开时，将 index 添加到 openeds
-            if (!this.openeds.includes(index)) {
-                this.openeds.push(index);
+            // 菜单项打开时，将 index 添加到 opened
+            if (!this.opened.includes(index)) {
+                this.opened.push(index);
             }
         },
         handleClose(index) {
-            // 菜单项关闭时，将 index 从 openeds 中移除
-            const idx = this.openeds.indexOf(index);
+            // 菜单项关闭时，将 index 从 opened 中移除
+            const idx = this.opened.indexOf(index);
             if (idx !== -1) {
-                this.openeds.splice(idx, 1);
+                this.opened.splice(idx, 1);
             }
         },
         loginBack() {
-            // 清除本地存储
-            localStorage.clear();
-
+            // // 清除本地存储
+            // localStorage.clear();
             this.name = ''; // 清空名字
             this.$router.push('/login');
         },
-
-        getLoginName() {
-            const token = localStorage.getItem('jwt'); // 确保获取最新的token
-            if (token) {
-                axios.post("/api/login/hello", {}, {
-                    headers: {
-                        'token': token
-                    }
-                }).then((result) => {
-                    this.name = result.data.data;
-                }).catch(error => {
-                    console.error('错误:', error);
-                });
-            } else {
-                this.name = ''; // 如果没有token，确保清空name
-            }
-        },
         hasPermission(permission) {
-            const EmpPermission = JSON.parse(localStorage.getItem('permission')) || []; // 获取用户权限数组
-            if (EmpPermission.includes(permission)) {
+            if (this.EmpPermission.includes(permission)) {
                 return true;
             } else {
                 return false;
@@ -185,8 +198,10 @@ export default {
 
     },
     mounted() {
-        this.name = ''; // 清空名字
-        this.getLoginName();
+        // 获取 Vuex 状态
+        const globalVar = store.getters.getGlobalVar;
+        this.name = globalVar.name;
+        this.EmpPermission = globalVar.permission || []; // 获取用户权限数组 
     }
 };
 </script>

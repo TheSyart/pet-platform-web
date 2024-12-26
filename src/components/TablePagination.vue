@@ -10,19 +10,41 @@
         :width="col.width" :align="col.align || 'center'">
 
         <template #default="{ row }">
+          <!-- { value: [0,1,2,3,4,5,6,7,8,9,10], name: '查看', color: 'primary', type: 'view' },
+            { value: [0], name: '确认', color: 'success', type:{ basis: 'order_type', basisValues: orderType, values: [1,3]} },
+            { value: [6,8], name: '删除', color: 'danger', type: 2 }, -->
 
-          <!-- 操作列的转化 -->
+          <!-- 常规操作列的转化 -->
           <template v-if="col.type === 'button'">
-            <el-button v-for="(action, idx) in col.details.filter(item => item.value === row.status)" :key="idx"
+            <el-button v-for="(action, idx) in col.details.filter(item => item.value.includes(row.status))" :key="idx"
               :type="action.color" size="mini" @click="handleAction(action, row)">
               {{ action.name }}
             </el-button>
           </template>
 
-          <!-- 状态列的转化 -->
+          <!-- 常规状态列的转化 -->
           <template v-else-if="col.type === 'tag'">
             <el-tag :type="col.details[0].color[row.status]" size="mini">
               {{ col.details[0].name[row.status] }} </el-tag>
+          </template>
+
+          <!-- 特定操作列的转化(order) -->
+          <template v-if="col.type === 'specialButton'">
+            <el-button v-for="(action, idx) in col.details.filter(item => item.value.includes(row[col.prop]))"
+              :key="idx" :type="action.color" size="mini" @click="handleAction(action, row)">
+              {{ action.name }}
+            </el-button>
+          </template>
+
+          <!-- 特定状态列的转化(order) -->
+          <template v-else-if="col.type === 'specialTag'">
+            <el-tag :type="col.details[0].color[row[col.prop]]" size="mini">
+              {{ col.details[0].name[row[col.prop]] }} </el-tag>
+          </template>
+
+          <!-- null检测状态转化 -->
+          <template v-else-if="col.type === 'null'">
+            {{ row[col.prop] || col.details[0].name }}
           </template>
 
           <!-- 字典转化 -->
@@ -114,11 +136,26 @@ export default {
   },
   methods: {
     handleAction(action, row) {
+      const pass = action.pass ? row[action.pass] : row.id;
+      //编辑查看订单，type为字符串
       if (action.type === 'update' || action.type === 'view') {
         this.$emit('fetch-single-data', row.id, action.type);
+
+        //更新订单状态，type为对象
+      } else if (typeof action.type === 'object' && action.type !== null) {
+        // 检查 action.type 对象的属性
+        if (action.type.basis && action.type.basisValues && action.type.values) {
+          if (action.type.basisValues.includes(row[action.type.basis])) {
+            // 查找 row[action.type.basis] 在 action.type.basisValues 中的索引
+            const index = action.type.basisValues.indexOf(row[action.type.basis]);
+            // 执行相应的操作
+            this.openMessageBox(pass, action.type.values[index], action.name);
+          }
+        }
+
+        //更新订单状态，type只为状态码
       } else {
-        this.openMessageBox(row.id, action.type, action.name);
-       
+        this.openMessageBox(pass, action.type, action.name);
       }
 
     },
@@ -143,23 +180,23 @@ export default {
       this.fetchAllEmpInfo(this.currentPage, newPageSize);
     },
     openMessageBox(id, type, name) {
-    this.$confirm('确认要' + name + '吗?', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }).then(() => {
-      this.$emit('updateStatus', id, type);
-      // this.$message({
-      //   type: 'success',
-      //   message: '状态更新成功!'
-      // });
-    }).catch(() => {
-      this.$message({
-        type: 'info',
-        message: '已取消更新'
-      });      
-    });
-  }
+      this.$confirm('确认要' + name + '吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$emit('updateStatus', id, type);
+        // this.$message({
+        //   type: 'success',
+        //   message: '状态更新成功!'
+        // });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消更新'
+        });
+      });
+    }
   },
   created() {
     this.fetchAllEmpInfo(this.currentPage, this.pageSize);

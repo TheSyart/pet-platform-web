@@ -72,13 +72,19 @@ export default {
         },
         tooltip: {
           trigger: 'item',
-          formatter: '{a} <br/>{b}: {c} ({d}%)'  // 显示百分比
+          formatter: '{a} <br/>{b}: {c}元 ({d}%)'  // 显示百分比
         },
         legend: {
+          data: this.hoppingTypeMap,
           orient: 'horizontal',
           bottom: '0%',
           left: 'center'
         },
+        color: [
+          "#5470C6", "#91CC75", "#EE6666", "#FAC858", "#73C0DE",
+          "#3BA272", "#FC8452", "#9A60B4", "#EA7CCC", "#3C91E6",
+          "#FF9F7F", "#62C1D4", "#D4A5A5", "#A29BFE"
+        ],
         toolbox: {
           feature: {
             saveAsImage: {}
@@ -116,7 +122,7 @@ export default {
         },
         tooltip: {
           trigger: 'item',
-          formatter: '{a} <br/>{b}: {c} ({d}%)'  // 显示百分比
+          formatter: '{a} <br/>{b}: {c}元 ({d}%)'  // 显示百分比
         },
         legend: {
           orient: 'horizontal',
@@ -156,6 +162,17 @@ export default {
           trigger: 'axis',
           axisPointer: {
             type: 'shadow'
+          },
+          formatter: function (params) {
+            let result = `${params[0].axisValue}<br/>`; // 添加 xAxis 的值（商品名称）
+            params.forEach(item => {
+              if (item.seriesName === '商品销售量') {
+                result += `${item.marker} ${item.seriesName}: ${item.value} 件<br/>`;
+              } else if (item.seriesName === '商品销售额') {
+                result += `${item.marker} ${item.seriesName}: ${item.value} 元<br/>`;
+              }
+            });
+            return result;
           }
         },
         legend: {},
@@ -226,6 +243,7 @@ export default {
           }
         ]
       },
+
       serviceMostSaleOptions: {
         title: {
           text: '宠物服务销量前十商品'
@@ -234,6 +252,17 @@ export default {
           trigger: 'axis',
           axisPointer: {
             type: 'shadow'
+          },
+          formatter: function (params) {
+            let result = `${params[0].axisValue}<br/>`; // 添加 xAxis 的值（商品名称）
+            params.forEach(item => {
+              if (item.seriesName === '商品销售量') {
+                result += `${item.marker} ${item.seriesName}: ${item.value} 件<br/>`;
+              } else if (item.seriesName === '商品销售额') {
+                result += `${item.marker} ${item.seriesName}: ${item.value} 元<br/>`;
+              }
+            });
+            return result;
           }
         },
         legend: {},

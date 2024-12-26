@@ -2,7 +2,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import ElementUI from 'element-ui';
-import axios from 'axios';
 import 'element-ui/lib/theme-chalk/index.css';
 import './views/resource/color.css';
 import './views/resource/style.css';
@@ -11,7 +10,7 @@ import { BarChart, LineChart } from 'echarts/charts';
 import { TitleComponent, TooltipComponent, GridComponent,LegendComponent, ToolboxComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import store from './store';
-
+import 'default-passive-events'
 
 Vue.filter('formatPrice', function(price) {
   return price ? `${price.toFixed(2)} 元` : '0.00 元';
@@ -29,9 +28,6 @@ Vue.prototype.$formatDateTime = (date) => {
       }).replace(/\//g, '-')
     : '';
 };
-
-// 设置 Axios 默认头部
-axios.defaults.headers.common['token'] = `${localStorage.getItem('jwt')}`;
 
 
 echarts.use([

@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { Loading, Message } from 'element-ui'; // 使用 Element UI 的消息提示
 import router from '@/router'; // 导入 Vue Router 实例
+import store from '@/store'; // 假设 store 文件路径为 src/store/index.js
+
+
 
 // 创建 Axios 实例
 const service = axios.create({
@@ -32,7 +35,8 @@ service.interceptors.request.use(
         pendingRequestCount++;
 
         // 在请求头中添加 token
-        const token = localStorage.getItem('jwt');
+        
+        const token = store.getters.getGlobalVar.jwt;
         if (token) {
             config.headers['token'] = token;  // 设置自定义的 token 请求头
         } else {

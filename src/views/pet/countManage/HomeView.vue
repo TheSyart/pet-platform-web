@@ -47,7 +47,7 @@
             <el-collapse-item name="money" v-if="orderData.length > 0">
               <template slot="title">
                 <span style="color: #F56C6C; font-size: 18px">
-                  总营业额: {{ orderData[0]?.totalPrice + orderData[1]?.totalPrice || 0 }}元
+                  总营业额: {{ (orderData[0]?.totalPrice + orderData[1]?.totalPrice || 0).toFixed(2) }}元
                   <i class="header-icon el-icon-money"></i>
                 </span>
               </template>
@@ -67,7 +67,8 @@
             <el-collapse-item name="order" v-if="orderData.length > 0">
               <template slot="title">
                 <span style="color: #E6A23C; font-size: 18px">
-                  待完成订单数: {{ orderData[0]?.ing + orderData[0]?.timeout + orderData[1]?.ing + orderData[1]?.timeout || 0 }}单
+                  待完成订单数: {{ orderData[0]?.ing + orderData[0]?.timeout + orderData[1]?.ing + orderData[1]?.timeout || 0
+                  }}单
                   <i class="header-icon el-icon-s-order"></i>
                 </span>
               </template>
@@ -106,106 +107,18 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { loginCount, orderCount } from '@/api/home/homeApi.js';
 import CommonData from '../../../commonData/CommonData.js';
 import EChart from '../../../components/EChart.vue';
+import { loginOptions, orderOptions } from '@/api/home/homeData.js';
 export default {
   components: {
     EChart
   },
-  computed: {
-
-
-  },
   data() {
     return {
-      loginOptions: {
-        title: {
-          text: "登录统计"
-        },
-        tooltip: {},
-        legend: {
-          data: ["登录总计", "登录成功", "登录失败"],
-          orient: 'horizontal',
-          bottom: '5%',  // 将图例稍微向下移动
-          left: 'center'
-        },
-        xAxis: {
-          type: "category",
-          data: [] // 动态填充员工和客户类别
-        },
-        yAxis: {
-          type: "value",
-        },
-        series: [
-          {
-            name: "登录总计",
-            type: "bar",
-            data: [] // 填充总计数据
-          },
-          {
-            name: "登录成功",
-            type: "bar",
-            data: [] // 填充成功数据
-          },
-          {
-            name: "登录失败",
-            type: "bar",
-            data: [] // 填充失败数据
-          }
-        ]
-      },
-      orderOptions: {
-        title: {
-          text: "订单统计",
-        },
-        tooltip: {},
-        legend: {
-          data: ["订单总数", "订单进行中", "订单取消", "订单完成", "订单超时"],
-          orient: 'horizontal',
-          bottom: '0%',  // 将图例稍微向下移动
-          left: 'center'
-        },
-        xAxis: {
-          type: "category",
-          data: []
-        },
-        yAxis: {
-          type: "value",
-        },
-        series: [
-          {
-            name: "订单总数",
-            type: "bar",
-            data: []
-          },
-          {
-            name: "订单进行中",
-            type: "bar",
-            data: []
-          },
-          {
-            name: "订单取消",
-            type: "bar",
-            data: []
-          },
-          {
-            name: "订单完成",
-            type: "bar",
-            data: []
-          },
-          {
-            name: "订单超时",
-            type: "bar",
-            data: []
-          },
-          // {
-          //   name: "订单总营业额",
-          //   type: "bar",
-          //   data: [] 
-          // }
-        ]
-      },
+      loginOptions: loginOptions,
+      orderOptions: orderOptions,
       ...CommonData,
       loginTypeMap: [],
       resultMap: [],
@@ -284,52 +197,16 @@ export default {
           return data ? data[key] : 0; // 如果没有找到数据，返回 0
         });
       });
-    }
-    ,
-    //对话框内表格渲染，调用open回调等才可以
-    openDialog(elementId, refName) {
-      this.$nextTick(() => {
-        if (elementId === 'EChartDialog') {
-          this.renderChart(elementId, refName);
-        }
-      })
-
     },
-    // //对话框内表格渲染，调用open回调等才可以
-    // openDialog(elementId, refName) {
-    //   this.$nextTick(() => {
-    //     if (elementId === 'EChartDialog') {
-    //       this.renderChart(elementId, refName);
-    //     }
-    //   })
-
-    // },
-    // 清除ECharts实例
-    clearEChartInstance(id) {
-      const chart = this.$echarts.getInstanceByDom(document.getElementById(id));
-      if (chart) {
-        chart.dispose();
-      }
-    },
-    getInformation() {
+    async getInformation() {
       const start = this.$formatDateTime(this.start);
       const end = this.$formatDateTime(this.end)
+      const params = { start: start, end: end };
 
-      console.log('start------------>' + start);
-      console.log('end------------>' + end);
-
-      axios.get("/api/ip/homeLoginCount",
-        {
-          params: {
-            start: start,
-            end: end
-          },
-          headers: {
-            'token': `${localStorage.getItem('jwt')}`
-          }
-        }).then((result) => {
-          this.loginData = result.data.data;
-          this.updateChartData(
+      try {
+        const response = await loginCount(params);
+        this.loginData = response.data;
+        this.updateChartData(
             this.loginData,
             'loginCategory',
             ['total', 'success', 'failed'],
@@ -339,38 +216,23 @@ export default {
           this.loginTypeMap = this.loginType;
           this.resultMap = this.result;
           this.accountTypeMap = this.accountType;
+      } catch (error) {
+        console.error('错误:', error);
+      }
 
-        }).catch(error => {
-          console.error('错误:', error);
-        });
-
-      axios.get("/api/petOrder/homeOrderCount",
-        {
-          params: {
-            start: start,
-            end: end
-          },
-          headers: {
-            'token': `${localStorage.getItem('jwt')}`
-          }
-        }).then((result) => {
-          this.orderData = result.data.data;
+      try {
+        const response = await orderCount(params);
+        this.orderData =response.data;
           this.updateChartData(
             this.orderData,
             'orderCategory',
-            ['totalOrder', 'ing', 'remove', 'finish', 'timeout'],
+            ['totalOrder', 'finishing', 'removing', 'remove', 'finish', 'timeout'],
             this.orderOptions
           );
-
-        }).catch(error => {
-          console.error('错误:', error);
-        });
-
-
-
+      } catch (error) {
+        console.error('错误:', error);
+      }
     },
-
-
   },
   mounted() {
     this.updateTime('day', 1);

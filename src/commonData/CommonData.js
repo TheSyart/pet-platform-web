@@ -1,8 +1,24 @@
 export const formItemWidth = '105px';
 
+export const formItemMiddleWidth = '300px';
+
 export const gender = [
   '男',
   '女'
+];
+export const salutation = [
+  '先生',
+  '女士'
+]
+
+export const status = [
+  '正常',
+  '删除'
+];
+
+export const orderType = [
+  "商城订单",
+  "服务订单"
 ];
 
 export const empStatus = [
@@ -22,6 +38,27 @@ export const dynamicsStatus = [
   '封禁',
   '删除'
 ];
+
+export const orderStatus = [
+  '订单待确认', '商品待配送', '商品自取中',
+  '服务待服务', '商品配送中', '商品已到货',
+  '订单取消中', '服务已超时', '申请退货中',
+  '订单已退款', '订单已完成'
+];
+
+export const pickMethod = [
+  '送货上门',
+  '线下自提',
+  '门店服务'
+];
+
+export const paymentMethod = [
+  '支付宝',
+  '微信',
+  '信用卡'
+];
+
+
 
 export default {
   salutation: [

@@ -1,4 +1,4 @@
-import { formItemWidth, gender, empStatus } from '@/commonData/CommonData';
+import { formItemWidth, formItemMiddleWidth, gender, empStatus } from '@/commonData/CommonData';
 
 export const SearchFormItems = [
   {
@@ -49,7 +49,7 @@ export const SearchFormItems = [
       rangeSeparator: '至',
       startPlaceholder: '开始日期',
       endPlaceholder: '结束日期',
-      style: 'width: 360px;'
+      style: { width: formItemMiddleWidth }
     }
   }
 ];
@@ -82,15 +82,14 @@ export const columns = [
   },
   {
     label: '操作',
-    prop: 'status',
+    prop: '',
     type: 'button',
     details: [
-      { value: 0, name: '编辑', color: 'primary', type: 'update' },
-      { value: 0, name: '停职', color: 'warning', type: 1 },
-      { value: 1, name: '编辑', color: 'primary', type: 'update' },
-      { value: 1, name: '辞退', color: 'warning', type: 2 },
-      { value: 1, name: '恢复', color: 'success', type: 0 },
-      { value: 2, name: '查看', color: 'warning', type: 'view' }
+      { value: [0,1], name: '编辑', color: 'primary', type: 'update' },
+      { value: [0], name: '停职', color: 'warning', type: 1 },
+      { value: [1], name: '辞退', color: 'warning', type: 2 },
+      { value: [1], name: '恢复', color: 'success', type: 0 },
+      { value: [2], name: '查看', color: 'warning', type: 'view' }
     ]
   }
 ]

@@ -19,7 +19,7 @@
   import { fetchData } from '@/api/common/dataFetcher';
   import { SearchFormItems, columns, CommonFormDialogItems } from '@/api/customer/customerData';
   import { pageQueryCustomer, queryOneCustomer, updateCustomerStatus, updateCustomer, deleteCustomer } from '@/api/customer/customerApi';
-  import { Message } from 'element-ui'; // 使用 Element UI 的消息提示
+  import { Message } from 'element-ui';
   import SearchForm from '@/components/SearchForm.vue';
   import CommonFormDialog from "@/components/CommonFormDialog.vue";
   import TablePagination from '@/components/TablePagination.vue';
@@ -110,7 +110,6 @@
         }
         this.searchForm.name = formData.name;
         this.searchForm.gender = formData.gender;
-  
         this.searchForm.status = formData.status;
         this.searchForm.begin = formData.dateRange[0] ? this.$formatDateTime(formData.dateRange[0]) : '';
         this.searchForm.end = formData.dateRange[1] ? this.$formatDateTime(formData.dateRange[1]) : '';

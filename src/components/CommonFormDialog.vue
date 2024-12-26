@@ -2,18 +2,58 @@
     <el-dialog :title="title" :visible="visible" @close="handleClose">
         <el-form :model="localFormData" :label-width="formLabelWidth" class="form-container">
             <!-- 动态生成表单项 -->
-            <div v-for="(item, index) in formItems" :key="index" class="form-item-wrapper">
+            <div v-for="(item, index) in filteredFormItems" :key="index" class="form-item-wrapper"
+                :class="{ 'full-width-item': item.fullWidth }">
                 <el-form-item :label="item.label" :label-width="formLabelWidth">
-                    <component :is="item.type" v-model="localFormData[item.prop]" v-bind="item.props"
-                        @upload-success="handleUploadSuccess">
+                    <!-- el-input -->
+                    <el-input v-if="item.type === 'el-input'" v-model="localFormData[item.prop]" v-bind="item.props">
+                    </el-input>
 
-                        <template v-if="item.type === 'el-select'">
-                            <el-option v-for="(opt, optIndex) in item.options" :key="optIndex" :label="opt"
-                                :value="optIndex" />
-                        </template>
+                    <!-- el-select -->
+                    <el-select v-if="item.type === 'el-select'" v-model="localFormData[item.prop]" v-bind="item.props">
+                        <el-option v-for="(opt, optIndex) in item.options" :key="optIndex" :label="opt"
+                            :value="optIndex" />
+                    </el-select>
 
-                        <ImgUploader v-if="item.type === 'ImgUploader'"></ImgUploader>
-                    </component>
+                    <!-- el-radio-group -->
+                    <el-radio-group v-if="item.type === 'el-radio-group'" v-model="localFormData[item.prop]"
+                        v-bind="item.props">
+                        <el-radio v-for="(radio, radioIndex) in item.options" :key="radioIndex" :label="radio.value">
+                            {{ radio.label }}
+                        </el-radio>
+                    </el-radio-group>
+
+                    <!-- el-checkbox-group -->
+                    <el-checkbox-group v-if="item.type === 'el-checkbox-group'" v-model="localFormData[item.prop]"
+                        v-bind="item.props">
+                        <el-checkbox v-for="(checkbox, checkboxIndex) in item.options" :key="checkboxIndex"
+                            :label="checkbox.value">
+                            {{ checkbox.label }}
+                        </el-checkbox>
+                    </el-checkbox-group>
+
+                    <!-- el-date-picker -->
+                    <el-date-picker v-if="item.type === 'el-date-picker'" v-model="localFormData[item.prop]"
+                        v-bind="item.props" type="date">
+                    </el-date-picker>
+
+                    <!-- ImgUploader -->
+                    <ImgUploader v-if="item.type === 'ImgUploader'" @upload-success="handleUploadSuccess"
+                        v-bind="item.props">
+                    </ImgUploader>
+
+                    <!-- el-table -->
+                    <el-table v-if="item.type === 'el-table'" :data="localFormData[item.prop]" v-bind="item.props">
+                        <el-table-column v-for="(col, index) in item.columns" :key="index" :prop="col.prop"
+                            :label="col.label" :width="col.width" :align="col.align || 'center'">
+                        </el-table-column>
+                    </el-table>
+
+                    <!-- el-button -->
+                    <el-button v-if="item.type === 'el-button'" v-bind="item.props" :icon="item.icon"
+                        @click="openDialog(item.formConfig)">
+                        {{ item.label }}
+                    </el-button>
                 </el-form-item>
             </div>
         </el-form>
@@ -25,16 +65,66 @@
                     @click="handleConfirm">确定</el-button>
             </div>
         </template>
+
+        <!-- 全局对话框对话框 -->
+        <el-dialog :title="currentDialogConfig.title" :visible.sync="dialogVisible" :append-to-body="true">
+            <CommonTable v-if="currentDialogConfig.type === 'table'" :columns="currentDialogConfig.columns"
+                :data="currentDialogConfig.data" v-bind="currentDialogConfig.props">
+            </CommonTable>
+
+            <el-descriptions
+                v-if="currentDialogConfig.type === 'descriptionMap' || currentDialogConfig.type === 'description'"
+                class="margin-top" :column="currentDialogConfig.descriptionProp.columns"
+                :size="currentDialogConfig.descriptionProp.size" :border="currentDialogConfig.descriptionProp.border">
+                <!-- 动态渲染每个描述项 -->
+                <el-descriptions-item v-for="(column, index) in currentDialogConfig.columns" :key="index">
+                    <template slot="label">
+                        <i :class="column.icon"></i>
+                        {{ column.label }}
+                    </template>
+                    <!-- 根据 type 类型渲染不同的内容 -->
+                    <template v-if="column.type === 'transform'">
+
+                        {{ column.details[currentDialogConfig.data[column.prop]] }}
+                    </template>
+                    <template v-else>
+                        {{ currentDialogConfig.data[column.prop] }}
+                    </template>
+                </el-descriptions-item>
+            </el-descriptions>
+
+            <template v-if="currentDialogConfig.type === 'descriptionMap'">
+                <MapView :centerPoint="centerPoint"
+                    :targetPoint="currentDialogConfig.data[currentDialogConfig.mapProp.targetPoint]"
+                    style="height: 500px;" />
+            </template>
+
+        </el-dialog>
+        <el-steps :active="1" align-center>
+            <el-step title="步骤 1" description="这是一段很长很长很长的描述性文字"></el-step>
+            <el-step title="步骤 2" description="这是一段很长很长很长的描述性文字"></el-step>
+            <el-step title="步骤 3" description="这段就没那么长了"></el-step>
+            <el-step title="步骤 1" description="这是一段很长很长很长的描述性文字"></el-step>
+            <el-step title="步骤 2" description="这是一段很长很长很长的描述性文字"></el-step>
+            <el-step title="步骤 3" description="这段就没那么长了"></el-step>
+            <el-step title="步骤 3" description="这段就没那么长了"></el-step>
+            <el-step title="步骤 1" description="这是一段很长很长很长的描述性文字"></el-step>
+            <el-step title="步骤 2" description="这是一段很长很长很长的描述性文字"></el-step>
+            <el-step title="步骤 3" description="这段就没那么长了"></el-step>
+        </el-steps>
     </el-dialog>
 </template>
-
 
 <script>
 import { Message } from 'element-ui';
 import ImgUploader from './ImgUploader.vue';
+import CommonTable from './CommonTable.vue'; // 导入 CommonTable 组件
+import MapView from "@/components/MapView.vue";
 export default {
     components: {
-        ImgUploader
+        ImgUploader,
+        CommonTable,
+        MapView
     },
     props: {
         title: {
@@ -69,10 +159,20 @@ export default {
     },
     data() {
         return {
+            centerPoint: [117.24619443753649, 31.815551443626454], // 示例起点坐标
+            // targetPoint: [117.324299, 31.892035], // 示例终点坐标
             localFormData: { ...this.formData },
             submitDisabled: true,
-            initialImageData: this.formData.image // 新增属性，用于存储初始图片路径
+            initialImageData: this.formData.image, // 新增属性，用于存储初始图片路径
+            dialogVisible: false,
+            currentDialogConfig: {
+            }
         };
+    },
+    computed: {
+        filteredFormItems() {
+            return this.formItems.filter(item => this.shouldShowItem(item));
+        }
     },
     watch: {
         // 监听条件变化
@@ -95,20 +195,36 @@ export default {
         },
     },
     methods: {
+        openDialog(formConfig) {
+
+            this.currentDialogConfig = formConfig;
+            this.currentDialogConfig.data = this.localFormData[formConfig.prop];
+            console.log("打开对话框", JSON.stringify(this.localFormData[formConfig.prop]));
+            this.dialogVisible = true;
+        },
+        shouldShowItem(item) {
+            if (!item.show) {
+                return true; // 如果没有 show 属性，默认显示
+            }
+            const { basis, value } = item.show;
+            return this.localFormData[basis] === value;
+        },
         startUpdate() {      //开始编辑
             this.formItems.forEach((item) => {
-                if(item.edit){
-                item.props.disabled = false;
-            }
+                if (item.edit) {
+                    item.props.disabled = false;
+                }
             });
             this.$forceUpdate(); // 强制更新视图
-           
             this.submitDisabled = false;
             console.log("开始编辑", JSON.stringify(this.formData));
         },
         handleClose() {
             this.formItems.forEach((item) => {
-                item.props.disabled = true;
+                // 如果存在 item.disabledStatus，不重置 disabled 状态
+                if (!item.disabledStatus) {
+                    item.props.disabled = true;
+                }
             });
             this.$emit('close'); // 触发父组件的关闭事件
         },
@@ -142,9 +258,7 @@ export default {
             } catch (error) {
                 Message.error(error.response?.data?.message || '更新失败!');
             }
-
-        }
-
+        },
     },
 };
 </script>
@@ -153,9 +267,7 @@ export default {
 .form-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    /* 每行显示四个表单项 */
     grid-gap: 20px;
-    /* 控制每个表单项之间的间距 */
 }
 
 .form-item-wrapper {
@@ -163,16 +275,17 @@ export default {
     width: 100%;
 }
 
-/* 统一设置每个表单项的宽度 */
+.full-width-item {
+    grid-column: span 3;
+}
+
 .el-form-item__content {
     width: 100% !important;
-    /* 确保内容区域宽度一致 */
 }
 
 .el-input,
 .el-select,
 .el-date-picker {
     width: 100% !important;
-    /* 确保各个组件宽度一致 */
 }
 </style>
