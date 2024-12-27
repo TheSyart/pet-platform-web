@@ -1,4 +1,4 @@
-import { formItemWidth, formItemMiddleWidth, status, orderStatus, gender, orderType, pickMethod, paymentMethod } from '@/commonData/CommonData';
+import { formItemWidth, formItemMiddleWidth, status, orderStatus, gender, orderType, pickMethod, paymentMethod, operatorContent, operatorType } from '@/commonData/CommonData';
 
 export const SearchFormItems = [
     {
@@ -156,7 +156,7 @@ const addressColumns = [
     { label: '性别', prop: 'gender', icon: 'el-icon-male', type: 'transform', details: gender },
     { label: '手机号', prop: 'phone', icon: 'el-icon-mobile-phone' },
     { label: '详细地址', prop: 'addressDetails', icon: 'el-icon-office-building' },
-    { label: '经纬度', prop: 'position', icon: 'el-icon-location-outline' },
+    { label: '经纬度', prop: 'position', icon: 'el-icon-location-outline' }
 ];
 
 const appointmentColumns = [
@@ -164,15 +164,14 @@ const appointmentColumns = [
     { label: '医师电话', prop: 'doctorPhone', icon: 'el-icon-mobile-phone' },
     { label: '预约宠物', prop: 'petName', icon: 'el-icon-chicken' },
     { label: '预约日期', prop: 'appointmentTime', icon: 'el-icon-date' },
-    { label: '预约时段', prop: 'serviceTimeSlot', icon: 'el-icon-timer' },
+    { label: '预约时段', prop: 'serviceTimeSlot', icon: 'el-icon-timer' }
 ];
 
 const reserveColumns = [
     { label: '提货人', prop: 'reservedName', icon: 'el-icon-user' },
     { label: '预留电话', prop: 'reservedPhone', icon: 'el-icon-mobile-phone' },
-    { label: '取货码', prop: 'secretKey', icon: 'el-icon-takeaway-box' },
-
-];
+    { label: '取货码', prop: 'secretKey', icon: 'el-icon-takeaway-box' }
+]; 
 
 export const CommonFormDialogItems = [
     { label: "订单编号", prop: "order_id", type: "el-input", props: { autocomplete: "off", disabled: true }, edit: true, isDate: false },
@@ -326,6 +325,24 @@ export const CommonFormDialogItems = [
         isDate: false,
         fullWidth: true
     },
-
-
+    {
+        label: "订单进展",
+        prop: "orderRecordList",
+        type: "el-steps",
+        data: {
+            operationContent: operatorContent,
+            operatorType: operatorType
+        },
+        stepProp: {
+            title: "operationContent",
+            description:["operatorType", "operatorName", "operatorTime"],
+        },
+        props: {
+            alignCenter: true,
+            direction: 'horizontal', // 根据需要调整方向
+        },
+        edit: false,
+        isDate: false,
+        fullWidth: true
+    }
 ];

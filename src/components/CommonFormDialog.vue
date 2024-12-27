@@ -1,10 +1,10 @@
 <template>
-    <el-dialog :title="title" :visible="visible" @close="handleClose">
-        <el-form :model="localFormData" :label-width="formLabelWidth" class="form-container">
+    <el-dialog :title="title" :visible="visible" @close="handleClose" width="1500px">
+        <el-form :model="localFormData" class="form-container">
             <!-- 动态生成表单项 -->
             <div v-for="(item, index) in filteredFormItems" :key="index" class="form-item-wrapper"
                 :class="{ 'full-width-item': item.fullWidth }">
-                <el-form-item :label="item.label" :label-width="formLabelWidth">
+                <el-form-item :label="item.label" label-width="100px">
                     <!-- el-input -->
                     <el-input v-if="item.type === 'el-input'" v-model="localFormData[item.prop]" v-bind="item.props">
                     </el-input>
@@ -54,6 +54,15 @@
                         @click="openDialog(item.formConfig)">
                         {{ item.label }}
                     </el-button>
+
+                    <!-- el-steps -->
+                    <el-steps v-if="item.type === 'el-steps' && localFormData[item.prop]"
+                        :active="localFormData[item.prop]?.length" v-bind="item.props">
+                        <el-step v-for="(step, index) in localFormData[item.prop]" :key="index"
+                            :title="item.data[item.stepProp.title][step[item.stepProp.title]]"
+                            :description="getDescription(step, item.stepProp.description, item.data)">
+                        </el-step>
+                    </el-steps>
                 </el-form-item>
             </div>
         </el-form>
@@ -100,18 +109,6 @@
             </template>
 
         </el-dialog>
-        <el-steps :active="1" align-center>
-            <el-step title="步骤 1" description="这是一段很长很长很长的描述性文字"></el-step>
-            <el-step title="步骤 2" description="这是一段很长很长很长的描述性文字"></el-step>
-            <el-step title="步骤 3" description="这段就没那么长了"></el-step>
-            <el-step title="步骤 1" description="这是一段很长很长很长的描述性文字"></el-step>
-            <el-step title="步骤 2" description="这是一段很长很长很长的描述性文字"></el-step>
-            <el-step title="步骤 3" description="这段就没那么长了"></el-step>
-            <el-step title="步骤 3" description="这段就没那么长了"></el-step>
-            <el-step title="步骤 1" description="这是一段很长很长很长的描述性文字"></el-step>
-            <el-step title="步骤 2" description="这是一段很长很长很长的描述性文字"></el-step>
-            <el-step title="步骤 3" description="这段就没那么长了"></el-step>
-        </el-steps>
     </el-dialog>
 </template>
 
@@ -142,10 +139,6 @@ export default {
         formItems: {
             type: Array,
             required: true,
-        },
-        formLabelWidth: {
-            type: String,
-            default: "80px",
         },
         formData: {
             type: Object,
@@ -195,6 +188,11 @@ export default {
         },
     },
     methods: {
+        getDescription(step, descriptionProps, data) {
+            return descriptionProps.map(prop =>
+            data[prop] ? data[prop][step[prop]] : step[prop]
+            ).join(' ');
+        },
         openDialog(formConfig) {
 
             this.currentDialogConfig = formConfig;

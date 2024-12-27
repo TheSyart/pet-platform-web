@@ -58,7 +58,26 @@ export const paymentMethod = [
   '信用卡'
 ];
 
+export const operatorContent = [
+  '创建订单',
+  '确认送货订单',
+  '确认自提订单',
+  '确认服务订单',
+  '开始商品配送',
+  '商品已到货',
+  '取消订单',
+  '服务已超时',
+  '申请退货',
+  '订单退款',
+  '订单完成',
+  '删除订单'
+];
 
+export const operatorType = [
+  '客户',
+  '员工',
+  '系统'
+];
 
 export default {
   salutation: [

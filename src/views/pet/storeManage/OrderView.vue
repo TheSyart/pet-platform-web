@@ -8,7 +8,6 @@
     <CommonFormDialog title="订单信息" :status="CommonFormButtonStatus" :visible.sync="dialogVisible"
       :formItems="CommonFormDialogItems" :formData="OneObject" formLabelWidth="100px" @close="clearOneInfoForm" />
 
-
     <TablePagination :columns="columns" :conditions="conditions" @fetch-single-data="handleSingleData"
       @updateStatus="updateStatus" :fetchAllInfo="pageQueryOrder" />
   </el-main>
@@ -188,10 +187,6 @@ export default {
           serviceTimeSlot: transformData.serviceTimeSlot
         }
       });
-    },
-    //预约门店服务时间信息
-    appointmentTimeAndSlot(time, detailsTime) {
-      return `${time} ${detailsTime}`;
     },
     //订单备注信息空值转无字
     noteInfo(note) {

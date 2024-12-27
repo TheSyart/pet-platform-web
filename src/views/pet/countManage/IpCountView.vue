@@ -16,8 +16,6 @@
         <el-card class="box-card" style="flex: 1; margin: 5px; width: 33%;">
           <EChart :options="loginTimeOptions" :width="'100%'" :height="'300px'" />
         </el-card>
-
-
       </div>
 
 

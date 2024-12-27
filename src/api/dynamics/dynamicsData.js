@@ -64,18 +64,57 @@ export const columns = [
     ]
   }
 ]
+
 export const CommonFormDialogItems = [
-  { label: "发布人", prop: "name", type: "el-input", props: { autocomplete: "off", disabled: true }, edit: true, isDate: false },
-  { label: "点赞人数", prop: "likeCount", type: "el-input", props: { autocomplete: "off", disabled: true }, edit: true, isDate: false },
-  { label: "具体点赞人", prop: "likepeople", type: "el-input", props: { autocomplete: "off", disabled: true, type: "textarea", rows: "3" }, edit: false, isDate: false },
   {
     label: "动态内容",
     prop: "content",
     type: "el-input",
-    props: { autocomplete: "off", disabled: true, type: "textarea", rows: "4" },
+    props: {
+      autocomplete: "off",
+      disabled: true,
+      type: "textarea",
+      rows: "4"
+    },
     edit: false,
     isDate: false,
     fullWidth: true
+  },
+  {
+    label: "具体点赞人",
+    prop: "likepeople",
+    type: "el-input",
+    props: {
+      autocomplete: "off",
+      disabled: true,
+      type: "textarea",
+      rows: "3"
+    },
+    edit: false,
+    isDate: false,
+    fullWidth: true
+  },
+  {
+    label: "发布人",
+    prop: "name",
+    type: "el-input",
+    props: {
+      autocomplete: "off",
+      disabled: true
+    },
+    edit: true,
+    isDate: false
+  },
+  {
+    label: "点赞人数",
+    prop: "likeCount",
+    type: "el-input",
+    props: {
+      autocomplete: "off",
+      disabled: true
+    },
+    edit: true,
+    isDate: false
   },
   {
     label: "动态图像",
@@ -88,6 +127,6 @@ export const CommonFormDialogItems = [
     },
     edit: true,
     isDate: false
-  },
+  }
 ];
 
