@@ -1,4 +1,4 @@
-import { formItemWidth, formItemMiddleWidth, dynamicsStatus } from '@/commonData/CommonData';
+import { formItemWidth, formItemMiddleWidth, dynamicsStatus } from '@/api/common/CommonData';
 
 export const SearchFormItems = [
   {

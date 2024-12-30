@@ -7,7 +7,8 @@
     </div>
 
     <!-- 图片已上传：显示图片和操作按钮 -->
-    <div v-else class="uploaded-image-wrapper" @mouseover="hovered = true" @mouseleave="hovered = false">
+    <div v-else :style="{ pointerEvents: disabled ? 'none' : 'auto' }" class="uploaded-image-wrapper"
+      @mouseover="hovered = true" @mouseleave="hovered = false">
       <img :src="internalImageUrl" class="avatar" />
       <div class="image-overlay" v-if="hovered">
         <span @click="handlePreview" class="image-action">
@@ -71,6 +72,13 @@ export default {
     imageUrl(newVal) {
       this.internalImageUrl = newVal;
     },
+    // disabled(newVal) {
+    //   if (newVal) {
+    //     console.log("禁用状态", newVal);
+    //   } else {
+    //     console.log("启用状态", newVal);
+    //   }
+    // },
   },
   methods: {
     beforeAvatarUpload(file) {

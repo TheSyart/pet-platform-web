@@ -108,7 +108,7 @@
 
 <script>
 import { loginCount, orderCount } from '@/api/home/homeApi.js';
-import CommonData from '../../../commonData/CommonData.js';
+import CommonData from '../../../api/common/CommonData.js';
 import EChart from '../../../components/EChart.vue';
 import { loginOptions, orderOptions } from '@/api/home/homeData.js';
 export default {

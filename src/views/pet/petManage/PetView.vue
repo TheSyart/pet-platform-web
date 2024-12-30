@@ -150,7 +150,7 @@
 import axios from 'axios';
 import SearchForm from '../../../components/SearchForm.vue';
 import DataFetcher from '../../../components/DataFetcher.vue';
-import CommonData from '../../../commonData/CommonData.js'; // 导入 CommonData 数据文件
+import CommonData from '../../../api/common/CommonData.js'; // 导入 CommonData 数据文件
 export default {
     components: {
         DataFetcher,

@@ -19,7 +19,7 @@ export async function fetchData(dataType) {
     case 'petDetails':
       apiUrl = '/myPet/queryPetDetails';
       break;
-    case 'petService':
+    case 'serviceType':
       apiUrl = '/petService/allServiceType';
       break;
     default:

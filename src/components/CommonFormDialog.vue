@@ -1,10 +1,10 @@
 <template>
-    <el-dialog :title="title" :visible="visible" @close="handleClose" width="1500px">
+    <el-dialog :title="title" :visible="visible" @close="handleClose" width="1400px">
         <el-form :model="localFormData" class="form-container">
             <!-- 动态生成表单项 -->
             <div v-for="(item, index) in filteredFormItems" :key="index" class="form-item-wrapper"
                 :class="{ 'full-width-item': item.fullWidth }">
-                <el-form-item :label="item.label" label-width="100px">
+                <el-form-item :label="item.label" label-width="80px">
                     <!-- el-input -->
                     <el-input v-if="item.type === 'el-input'" v-model="localFormData[item.prop]" v-bind="item.props">
                     </el-input>
@@ -194,7 +194,6 @@ export default {
             ).join(' ');
         },
         openDialog(formConfig) {
-
             this.currentDialogConfig = formConfig;
             this.currentDialogConfig.data = this.localFormData[formConfig.prop];
             console.log("打开对话框", JSON.stringify(this.localFormData[formConfig.prop]));
@@ -257,6 +256,9 @@ export default {
                 Message.error(error.response?.data?.message || '更新失败!');
             }
         },
+    },
+    created() {
+        console.log("CommonFormDialog created", this.formItems);
     },
 };
 </script>

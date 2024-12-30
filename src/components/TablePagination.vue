@@ -1,18 +1,13 @@
 <template>
   <div>
-
     <!-- 引用封装的 MessageDialog 组件 -->
     <MessageDialog ref="messageDialog" />
-
-    <el-table :data="data" class="table-container" border align="center" header-align="center"
-      :header-cell-style="{ backgroundColor: '#f5f5f5', color: '#333' }" height="600px">
+    <el-table :height="tableHeight" :data="data" class="table-container" border align="center" header-align="center"
+      :header-cell-style="{ backgroundColor: '#f5f5f5', color: '#333' }" >
       <el-table-column v-for="(col, index) in columns" :key="index" :prop="col.prop" :label="col.label"
-        :width="col.width" :align="col.align || 'center'">
+        :width="col.width" :align="col.align || 'center'" v-bind="col.props">
 
         <template #default="{ row }">
-          <!-- { value: [0,1,2,3,4,5,6,7,8,9,10], name: '查看', color: 'primary', type: 'view' },
-            { value: [0], name: '确认', color: 'success', type:{ basis: 'order_type', basisValues: orderType, values: [1,3]} },
-            { value: [6,8], name: '删除', color: 'danger', type: 2 }, -->
 
           <!-- 常规操作列的转化 -->
           <template v-if="col.type === 'button'">
@@ -57,6 +52,12 @@
             {{ row[col.prop] + col.details[0].name }}
           </template>
 
+          <!-- 合并列值 -->
+          <template v-else-if="col.type === 'merge'">
+            {{ (col.details.map(detail => row[detail]).filter(value => value !== undefined && value !== null).join(' '))
+              || "无" }}
+          </template>
+
           <template v-else>
             {{ row[col.prop] }}
           </template>
@@ -65,36 +66,26 @@
 
       </el-table-column>
     </el-table>
-
-
-
-
     <!-- 分页部分 -->
-    <div style="width: 100%; margin-top: 20px;">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div style=" height: 30px; display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
 
-        <!-- 左侧: 每页显示数量 -->
-        <el-pagination background layout="sizes" :page-size="pageSize" :total="total" @size-change="handleSizeChange"
-          style="flex: 1; text-align: left;"></el-pagination>
+      <!-- 左侧: 每页显示数量 -->
+      <el-pagination background layout="sizes" :page-size="pageSize" :total="total" @size-change="handleSizeChange"
+        style="flex: 1; text-align: left;"></el-pagination>
 
-        <!-- 中间: 页码切换 -->
-        <div style="flex: 1; display: flex; justify-content: center;">
-          <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
-            :current-page="currentPage" @current-change="handlePageChange"></el-pagination>
-        </div>
+      <!-- 中间: 页码切换 -->
+      <div style="flex: 1; display: flex; justify-content: center;">
+        <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
+          :current-page="currentPage" @current-change="handlePageChange"></el-pagination>
+      </div>
 
-        <!-- 右侧: 跳转和总数 -->
-        <div style="flex: 1; display: flex; justify-content: flex-end;">
-          <el-pagination background layout="jumper" style="margin-right: 10px;"
-            @current-change="handlePageChange"></el-pagination>
-          <el-pagination background layout="total" :total="total"></el-pagination>
-        </div>
+      <!-- 右侧: 跳转和总数 -->
+      <div style="flex: 1; display: flex; justify-content: flex-end;">
+        <el-pagination background layout="jumper" style="margin-right: 10px;"
+          @current-change="handlePageChange"></el-pagination>
+        <el-pagination background layout="total" :total="total"></el-pagination>
       </div>
     </div>
-
-
-
-
   </div>
 </template>
 
@@ -104,6 +95,10 @@ import MessageDialog from './MessageDialog.vue';
 export default {
   components: { MessageDialog },
   props: {
+    tableHeight: {
+      type: String,
+      default: '500px',
+    },
     columns: {
       type: Array,
       required: true,
@@ -129,7 +124,7 @@ export default {
     conditions: {
       handler: _.debounce(function () {
         this.currentPage = 1;
-        this.fetchAllEmpInfo(this.currentPage, this.pageSize);
+        this.fetchAllOneObjectInfo(this.currentPage, this.pageSize);
       }, 300), // 300ms 防抖
       deep: true,
     },
@@ -159,12 +154,15 @@ export default {
       }
 
     },
-    async fetchAllEmpInfo(page, size) {
+    async fetchAllOneObjectInfo(page, size) {
       const data = { conditions: this.conditions, pagination: { page, size } };
       try {
         const response = await this.fetchAllInfo(data);
         this.data = response.data.list;
+        this.$emit('fetch-all-data', this.data);
         this.total = response.data.total;
+        console.log(this.data);
+
       } catch (error) {
         console.error('分页获取信息失败:', error);
       }
@@ -172,12 +170,12 @@ export default {
 
     handlePageChange(newPage) {
       this.currentPage = newPage;
-      this.fetchAllEmpInfo(newPage, this.pageSize);
+      this.fetchAllOneObjectInfo(newPage, this.pageSize);
     },
     handleSizeChange(newPageSize) {
       this.currentPage = 1; //切换页面尺寸时，页数重置为1(防止你的当前页，因为数据量不足，没数据，且当前分页按钮也没有的的问题)
       this.pageSize = newPageSize;
-      this.fetchAllEmpInfo(this.currentPage, newPageSize);
+      this.fetchAllOneObjectInfo(this.currentPage, newPageSize);
     },
     openMessageBox(id, type, name) {
       this.$confirm('确认要' + name + '吗?', '提示', {
@@ -199,7 +197,7 @@ export default {
     }
   },
   created() {
-    this.fetchAllEmpInfo(this.currentPage, this.pageSize);
+    this.fetchAllOneObjectInfo(this.currentPage, this.pageSize);
   },
 };
 </script>

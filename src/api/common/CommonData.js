@@ -1,15 +1,21 @@
 export const formItemWidth = '105px';
 
-export const formItemMiddleWidth = '300px';
+export const formItemMiddleWidth = '360px';
 
 export const gender = [
   '男',
   '女'
 ];
+
 export const salutation = [
   '先生',
   '女士'
 ]
+
+export const petSex = [
+  '雄性',
+  '雌性'
+];
 
 export const status = [
   '正常',
@@ -46,6 +52,11 @@ export const orderStatus = [
   '订单已退款', '订单已完成'
 ];
 
+export const petStatus = [
+  '正常',
+  '删除'
+];
+
 export const pickMethod = [
   '送货上门',
   '线下自提',
@@ -77,6 +88,23 @@ export const operatorType = [
   '客户',
   '员工',
   '系统'
+];
+
+export const accountType = [
+  '客户',
+  '员工'
+];
+
+export const loginType = [
+  '客户账户登录',
+  '客户手机登录',
+  '员工账户登录',
+  '员工手机登录'
+];
+
+export const result = [
+  '成功',
+  '失败',
 ];
 
 export default {

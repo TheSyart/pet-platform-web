@@ -1,7 +1,7 @@
 <template>
   <el-main>
     <!-- 表单 -->
-    <SearchForm :searchForm="searchForm" :formItems="SearchFormItems" @submit="onSubmit" />
+    <SearchForm :searchForm="searchForm" :formItems="SearchFormItems" @submit="onSubmit" @get-search-form-height="getSearchFormHeight" />
 
     <el-button type="primary" size="small" plain round @click="addDialogVisible = true"
       style="height:30px;">新增员工</el-button>
@@ -15,7 +15,7 @@
       @confirm="handleAddConfirm" />
 
 
-    <TablePagination :columns="columns" :conditions="conditions" @fetch-single-data="handleSingleData"
+    <TablePagination :tableHeight="tableHight" :columns="columns" :conditions="conditions" @fetch-single-data="handleSingleData"
       @updateStatus="updateStatus" :fetchAllInfo="pageQueryEmp" />
   </el-main>
 </template>
@@ -24,7 +24,7 @@
 import { fetchData } from '@/api/common/dataFetcher';
 import { SearchFormItems, columns, CommonFormDialogItems, AddFormDialogItems } from '@/api/emp/empData';
 import { pageQueryEmp, queryOneEmp, insertOneEmp, updateEmpStatus, updateEmp, deleteEmp } from '@/api/emp/empApi';
-import { Message } from 'element-ui'; // 使用 Element UI 的消息提示
+import { Message } from 'element-ui'; 
 import SearchForm from '@/components/SearchForm.vue';
 import CommonFormDialog from "@/components/CommonFormDialog.vue";
 import AddFormDialog from "@/components/AddFormDialog.vue";
@@ -36,8 +36,18 @@ export default {
     CommonFormDialog,
     AddFormDialog
   },
+  computed: {
+    tableHight() {
+      //60的头部，30的新增按钮，30的分页，20分页的margin，80的el-main的padding=20 *4(上下各一个20)
+      console.log("窗口", window.innerHeight);
+      let tableHeight = window.innerHeight - 60 - this.searchFormHeight - 30 - 30 - 20 - 40 - 40;
+      console.log(`${tableHeight}px`);
+      return `${tableHeight}px`;
+    }
+  },
   data() {
     return {
+      searchFormHeight: 63,
       SearchFormItems: [...SearchFormItems],
       columns: [...columns],
       CommonFormDialogItems: [...CommonFormDialogItems],
@@ -46,15 +56,6 @@ export default {
       dialogVisible: false,
       addDialogVisible: false,
       OneObject: {  // 查询单条数据的载体
-        // id: "",
-        // name: "",
-        // phone: "",
-        // gender: "",
-        // job: "",
-        // birth: "",
-        // username: "",
-        // password: "",
-        // image: "",
       },
       conditions: {   //分页查询请求体
         name: '',
@@ -65,7 +66,7 @@ export default {
         status: ''
       },
       searchForm: {   //searchForm组件的数据载体
-        entrydate: [],
+        dateRange: [],
         name: "",
         gender: "",
         begin: '',
@@ -96,6 +97,10 @@ export default {
     }
   },
   methods: {
+    getSearchFormHeight(height) {
+      console.log("监控", height)
+      this.searchFormHeight = height;
+    },
     //////////////表格操作单个数据status/////////////////////////////////////////////////////////////////////////////////////////
     updateStatus(id, status) {
       console.log(id, status);
@@ -103,7 +108,7 @@ export default {
     },
     resetSearchForm() {
       this.searchForm = {
-        entrydate: "",
+        dateRange: [],
         name: "",
         gender: "",
         begin: '',
@@ -116,17 +121,17 @@ export default {
     },
     /////////////分页查询函数///////////////////////////////////////////////////////////////////////////////
     onSubmit(formData) {
-      this.searchForm.entrydate = formData.entrydate; //回显选择时间
+      this.searchForm.dateRange = formData.dateRange; //回显选择时间
       //时间选择器自带的 X ，点击后会让值为null
-      if (formData.entrydate == null) {
-        formData.entrydate = [];
+      if (formData.dateRange == null) {
+        formData.dateRange = [];
       }
       this.searchForm.name = formData.name;
       this.searchForm.gender = formData.gender;
       this.searchForm.job = formData.job;
       this.searchForm.status = formData.status;
-      this.searchForm.begin = formData.entrydate[0] ? this.$formatDateTime(formData.entrydate[0]) : '';
-      this.searchForm.end = formData.entrydate[1] ? this.$formatDateTime(formData.entrydate[1]) : '';
+      this.searchForm.begin = formData.dateRange[0] ? this.$formatDateTime(formData.dateRange[0]) : '';
+      this.searchForm.end = formData.dateRange[1] ? this.$formatDateTime(formData.dateRange[1]) : '';
 
       this.updateConditions();
     },
@@ -142,15 +147,6 @@ export default {
     // 关闭时和取消时清理表单
     clearOneInfoForm() {
       this.OneObject = {  // 查询单条数据的载体
-        // id: "",
-        // name: "",
-        // phone: "",
-        // gender: "",
-        // job: "",
-        // birth: "",
-        // username: "",
-        // password: "",
-        // image: ""
       },
         this.dialogVisible = false;
     },
@@ -220,7 +216,7 @@ export default {
         console.error('员工状态操作失败:', error);
       }
     },
-    async fetchJobOptions() {
+    async fetchDataOptions() {
       try {
         const jobData = await fetchData('empJob');
         this.jobMap = jobData;
@@ -238,11 +234,6 @@ export default {
           if (item.prop === 'job') {
             item.options = this.jobMap;
           }
-          if (item.prop === 'image') {
-            item.props.imageUrl = this.OneObject.image;
-            item.props.id = this.OneObject.id;
-            item.props.fetchDelete = this.deleteEmp;
-          }
         });
         this.AddFormDialogItems.forEach((item) => {
           if (item.prop === 'job') {
@@ -256,7 +247,7 @@ export default {
     }
   },
   created() {
-    this.fetchJobOptions();
+    this.fetchDataOptions();
   }
 };
 </script>

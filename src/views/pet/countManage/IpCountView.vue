@@ -1,301 +1,118 @@
 <template>
-  <div class="main-content">
-    <el-main style="display: flex; flex-direction: column;">
-      <!-- 表单 -->
-      <SearchForm :searchForm="searchForm" :formItems="formItems" @submit="onSubmit" />
-      <!-- 图表 -->
-      <div style="display: flex; flex: 1;">
-        <el-card class="box-card" style="flex: 1; margin: 5px; width: 33%;">
-          <EChart :options="loginTypeOptions" :width="'100%'" :height="'300px'" />
-        </el-card>
+  <el-main>
+    <!-- 表单 -->
+    <SearchForm :searchForm="searchForm" :formItems="SearchFormItems" @submit="onSubmit"  @get-search-form-height="getSearchFormHeight"/>
 
-        <el-card class="box-card" style="flex: 1; margin: 5px; width: 33%;">
-          <EChart :options="loginResultOptions" :width="'100%'" :height="'300px'" />
-        </el-card>
+    <span style="display: flex; flex: 1;">
+      <el-card class="box-card" style="flex: 1;">
+        <EChart :options="loginTypeOptions" :height="'250px'" />
+      </el-card>
 
-        <el-card class="box-card" style="flex: 1; margin: 5px; width: 33%;">
-          <EChart :options="loginTimeOptions" :width="'100%'" :height="'300px'" />
-        </el-card>
-      </div>
+      <el-card class="box-card" style="flex: 1;">
+        <EChart :options="loginResultOptions" :height="'250px'" />
+      </el-card>
 
+      <el-card class="box-card" style="flex: 1; ">
+        <EChart :options="loginTimeOptions" :height="'250px'" />
+      </el-card>
+    </span>
 
-      <div style="display: flex; flex: 1;">
-        <el-card class="box-card" style="flex: 1; margin: 5px;">
-          <el-table class="table-container" :data="tableData" border align="center" header-align="center"
-            :header-cell-style="{ backgroundColor: '#f5f5f5', color: '#333' }" height="300px">
-            <el-table-column v-for="column in columns" :key="column.prop" :label="column.label" :prop="column.prop"
-              align="center">
-              <template #default="{ row }">
-
-                <template v-if="column.prop === 'accountType'">
-                  {{ accountTypeMap[row.accountType] }}
-                </template>
-                <template v-else-if="column.prop === 'result'">
-                  {{ resultMap[row.result] }}
-                </template>
-                <template v-else-if="column.prop === 'login_type'">
-                  {{ loginTypeMap[row.login_type] }}
-                </template>
-                <template v-else-if="column.prop === 'country'">
-                  {{ (row.country || '') + ' ' + (row.region || '') + ' ' + (row.city || '') }}
-                </template>
-
-                <!-- 默认渲染其他列的值 -->
-                <template v-else>
-                  {{ row[column.prop] }}
-                </template>
-              </template>
-            </el-table-column>
-          </el-table>
-
-          <!-- 分页 -->
-          <div style="height: 10%; width: 100%;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <el-pagination background layout="sizes" :page-size="pageSize" :total="total"
-                @size-change="handleSizeChange" style="flex: 1; text-align: left;">
-              </el-pagination>
-              <div style="flex: 1; display: flex; justify-content: center;">
-                <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
-                  @size-change="handleSizeChange" :current-page="currentPage" @current-change="handleCurrentChange">
-                </el-pagination>
-              </div>
-              <div style="flex: 1; display: flex; justify-content: flex-end;">
-                <el-pagination background layout="jumper" style="margin-right: 10px;">
-                </el-pagination>
-                <el-pagination background layout="total" :total="total">
-                </el-pagination>
-              </div>
-            </div>
-          </div>
-        </el-card>
-      </div>
-    </el-main>
-  </div>
+    <TablePagination :tableHeight="tableHeight" :columns="columns" :conditions="conditions" :fetchAllInfo="pageQueryLoginCount" @fetch-all-data="updateChartData" />
+  </el-main>
 </template>
 
 <script>
-import axios from 'axios';
-import SearchForm from '../../../components/SearchForm.vue';
-import CommonData from '../../../commonData/CommonData.js';
-import EChart from '../../../components/EChart.vue';
 import moment from 'moment';
+import { loginType, result } from '@/api/common/CommonData';
+import EChart from '../../../components/EChart.vue';
+import { SearchFormItems, columns } from '@/api/ipCount/ipCountData';
+import { pageQueryLoginCount } from '@/api/ipCount/ipCountApi';
+import SearchForm from '@/components/SearchForm.vue';
+import TablePagination from '@/components/TablePagination.vue';
+import { loginResultOptions, loginTimeOptions, loginTypeOptions } from '@/api/ipCount/ipCountData.js';
 export default {
   components: {
     EChart,
-    SearchForm
+    SearchForm,
+    TablePagination,
   },
   computed: {
-    formItems() {
-      return [
-        {
-          label: '登录账户',
-          component: 'el-input',
-          prop: 'username',
-          props: { placeholder: '登录账户', style: { width: this.formItemWidth } }
-        },
-        {
-          label: 'Ip地址',
-          component: 'el-input',
-          prop: 'ip',
-          props: { placeholder: 'Ip地址', style: { width: this.formItemWidth } }
-        },
-        {
-          label: '账户类型',
-          component: 'el-select',
-          prop: 'accountType',
-          props: {
-            placeholder: '账户类型',
-            clearable: true,
-            style: { width: this.formItemWidth }
-          },
-          options: this.accountTypeMap
-        },
-        {
-          label: '登录日期',
-          component: 'el-date-picker',
-          prop: 'createdDate',
-          props: {
-            type: 'datetimerange',
-            rangeSeparator: '至',
-            startPlaceholder: '开始日期',
-            endPlaceholder: '结束日期',
-            style: 'width: 360px;'
-          }
-        }
-      ];
-    }
+    tableHeight() {
+      //60的头部，302的card，30的分页，20分页的margin，80的el-main的padding=20 *4(上下各一个20)
+      console.log("窗口",window.innerHeight);
+      let tableHeight = window.innerHeight - 60 - this.searchFormHeight - 302 - 30 - 20 - 40 -40;
+      console.log(`${tableHeight}px`);
+      return `${tableHeight}px`;
+    },
   },
   data() {
     return {
-      loginTypeOptions: {
-        title: {
-          text: '登录方式统计',
-          subtext: 'Fake Data',
-          left: 'center'
-        },
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b}: {c} ({d}%)'  // 显示百分比
-        },
-        legend: {
-          orient: 'horizontal',
-          bottom: '0%',
-          left: 'center'
-        },
-        toolbox: {
-          feature: {
-            saveAsImage: {}
-          }
-        },
-        series: [
-          {
-            name: '登录方式',
-            type: 'pie',
-            radius: '50%',
-            data: [],  // 数据将动态填充
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            },
-            label: {
-              show: true,
-              formatter: '{b}: {d}%'  // 显示百分比
-            }
-          }
-        ]
-      },
-      loginResultOptions: {
-        title: {
-          text: '登录结果统计',
-          subtext: 'Fake Data',
-          left: 'center'
-        },
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b}: {c} ({d}%)'  // 显示百分比
-        },
-        legend: {
-          orient: 'horizontal',
-          bottom: '0%',
-          left: 'center'
-        },
-        toolbox: {
-          feature: {
-            saveAsImage: {}
-          }
-        },
-        series: [
-          {
-            name: '登录结果',
-            type: 'pie',
-            radius: '50%',
-            data: [],  // 数据将动态填充
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            },
-            label: {
-              show: true,
-              formatter: '{b}: {d}%'  // 显示百分比
-            }
-          }
-        ]
-      },
-      loginTimeOptions: {
-        title: {
-          text: '登陆时间统计'
-        },
-        tooltip: {
-          trigger: 'axis'
-        },
-        legend: {
-          data: this.accountTypeMap,
-          orient: 'horizontal',
-          bottom: '0%',
-          left: 'center'
-        },
-        toolbox: {
-          feature: {
-            saveAsImage: {}
-          }
-        },
-        xAxis: {
-          type: 'category',
-          boundaryGap: false,
-          data: []
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            name: '员工',
-            type: 'line',
-            data: []
-          },
-          {
-            name: '客户',
-            type: 'line',
-            data: []
-          }
-        ]
-      },
-      ...CommonData,
-      loginTypeMap: [],
-      resultMap: [],
-      accountTypeMap: [],
-      tableData: [],
-      columns: [
-        { label: '登录账户', prop: 'account' },
-        { label: '登录账户类型', prop: 'accountType' },
-        { label: 'IP 地址', prop: 'ip' },
-        { label: '登录地址', prop: 'country' },
-        { label: '登录时间', prop: 'createdDate' },
-        { label: '错误原因', prop: 'message' },
-        { label: '登录结果', prop: 'result' },
-        { label: '登录方式', prop: 'login_type' }
-      ],
-      searchForm: {
+      searchFormHeight: 63,
+      loginResultOptions: loginResultOptions,
+      loginTimeOptions: loginTimeOptions,
+      loginTypeOptions: loginTypeOptions,
+      columns: columns,
+      SearchFormItems: SearchFormItems,
+      conditions: {   //分页查询请求体
         username: "",
         ip: "",
         accountType: "",
-        createdDate: []
+        loginType: "",
+        result: "",
+        begin: '',
+        end: ''
       },
-      currentPage: 1,
-      pageSize: 10,
-      total: 0,
-      formItemWidth: '105px'
-    }
+      searchForm: {   //searchForm组件的数据载体
+        dateRange: [],
+        username: "",
+        ip: "",
+        accountType: "",
+        loginType: "",
+        result: "",
+        begin: '',
+        end: ''
+      },
+    };
   },
-
   methods: {
+    //////////////动态获取搜索框高度/////////////////////////////////////////////////////////////////////////
+    getSearchFormHeight(height){
+      console.log("监控",height)
+      this.searchFormHeight = height;
+    },
+    /////////////分页查询函数///////////////////////////////////////////////////////////////////////////////
     onSubmit(formData) {
-      this.searchForm = formData;
-      this.getInformation();
+      this.searchForm.dateRange = formData.dateRange; //回显选择时间
+      //时间选择器自带的 X ，点击后会让值为null
+      if (formData.dateRange == null) {
+        formData.dateRange = [];
+      }
+
+      this.searchForm.username = formData.username;
+      this.searchForm.ip = formData.ip;
+      this.searchForm.accountType = formData.accountType;
+      this.searchForm.loginType = formData.loginType;
+      this.searchForm.result = formData.result;
+      this.searchForm.begin = formData.dateRange[0] ? this.$formatDateTime(formData.dateRange[0]) : '';
+      this.searchForm.end = formData.dateRange[1] ? this.$formatDateTime(formData.dateRange[1]) : '';
+
+      this.updateConditions();
     },
-    handleSizeChange(newSize) {
-      this.pageSize = newSize;
-      this.currentPage = 1;
-      this.getInformation();
+    updateConditions() {
+      // 通过更新 conditions 来触发table子组件的 watch
+      this.conditions = { ...this.searchForm };
     },
-    handleCurrentChange(newPage) {
-      this.currentPage = newPage;
-      this.getInformation();
-    },
+    ////////////该界面所用api函数 //////////////////////////////////////////////////////////////////////////
+    pageQueryLoginCount,
+    ////////////////图表更新函数 /////////////////////////////////////////////////////////////////////////// 
     updateChartData(responseDate) {
       // 根据 Map 的长度动态初始化数组
-      const loginTypeCount = new Array(this.loginTypeMap.length).fill(0);
-      const resultTypeCount = new Array(this.resultMap.length).fill(0);
+      const loginTypeCount = new Array(loginType.length).fill(0);
+      const resultTypeCount = new Array(result.length).fill(0);
 
       // 计数并更新图表数据
-      this.setMap(responseDate, loginTypeCount, this.loginTypeMap, this.loginTypeOptions, 'login_type');
-      this.setMap(responseDate, resultTypeCount, this.resultMap, this.loginResultOptions, 'result');
+      this.setMap(responseDate, loginTypeCount, loginType, this.loginTypeOptions, 'login_type');
+      this.setMap(responseDate, resultTypeCount, result, this.loginResultOptions, 'result');
       this.setLineEChart(responseDate);
     },
     setMap(responseDate, typeCount, typeMap, options, dateItem) {
@@ -360,57 +177,6 @@ export default {
       this.loginTimeOptions.series[0].data = allDates.map(date => empCountMap[date] || 0);  // 员工数据
       this.loginTimeOptions.series[1].data = allDates.map(date => customerCountMap[date] || 0);  // 客户数据
     }
-    ,
-    getInformation() {
-      //时间选择器自带的 X ，点击后会让值为null
-      if (this.searchForm.createdDate == null) {
-        this.searchForm.createdDate = [];
-      }
-
-      const page = this.currentPage;
-      const size = this.pageSize;
-      const username = this.searchForm.username;
-      const ip = this.searchForm.ip;
-      const accountType = this.searchForm.accountType;
-      const begin = this.searchForm.createdDate[0] ? this.$formatDateTime(this.searchForm.createdDate[0]) : '';
-      const end = this.searchForm.createdDate[1] ? this.$formatDateTime(this.searchForm.createdDate[1]) : '';
-
-      axios.post("/api/ip/queryAllIpInfo", {
-        conditions: {
-          username: username,
-          ip: ip,
-          accountType: accountType,
-          begin: begin,
-          end: end,
-
-        },
-        pagination: {
-          page: page,
-          size: size
-        }
-      }, {
-        headers: {
-          'token': `${localStorage.getItem('jwt')}`
-        }
-      }).then((result) => {
-        this.tableData = result.data.data.list;
-        this.total = result.data.data.total;
-
-
-        this.loginTypeMap = this.loginType;
-        this.resultMap = this.result;
-        this.accountTypeMap = this.accountType;
-
-        this.updateChartData(this.tableData);
-      }).catch(error => {
-        console.error('错误:', error);
-      });
-    },
-
-
-  },
-  mounted() {
-    this.getInformation();
-  },
+  }
 };
 </script>

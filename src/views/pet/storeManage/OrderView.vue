@@ -1,15 +1,15 @@
 <template>
   <el-main>
     <!-- 表单 -->
-    <SearchForm :searchForm="searchForm" :formItems="SearchFormItems" @submit="onSubmit" />
+    <SearchForm ref="searchForm" :searchForm="searchForm" :formItems="SearchFormItems" @submit="onSubmit" @get-search-form-height="getSearchFormHeight" />
 
     <el-button type="primary" size="small" plain round style="height:30px; visibility: hidden">新增</el-button>
 
     <CommonFormDialog title="订单信息" :status="CommonFormButtonStatus" :visible.sync="dialogVisible"
       :formItems="CommonFormDialogItems" :formData="OneObject" formLabelWidth="100px" @close="clearOneInfoForm" />
 
-    <TablePagination :columns="columns" :conditions="conditions" @fetch-single-data="handleSingleData"
-      @updateStatus="updateStatus" :fetchAllInfo="pageQueryOrder" />
+    <TablePagination :table-height="tableHight" :columns="columns" :conditions="conditions"
+      @fetch-single-data="handleSingleData" @updateStatus="updateStatus" :fetchAllInfo="pageQueryOrder" />
   </el-main>
 </template>
 
@@ -27,6 +27,15 @@ export default {
     TablePagination,
     CommonFormDialog
   },
+  computed: {
+    tableHight() {
+      //60的头部，30的新增按钮，30的分页，20分页的margin，80的el-main的padding=20 *4(上下各一个20)
+      console.log("窗口", window.innerHeight);
+      let tableHeight = window.innerHeight - 60 - this.searchFormHeight - 30 - 30 - 20 - 40 - 40;
+      console.log(`${tableHeight}px`);
+      return `${tableHeight}px`;
+    }
+  },
   watch: {    //监听查询单个的值，返回给CommonFormDialogItems下的一些值
     OneObject(newValue) {
       this.CommonFormDialogItems.forEach(item => {
@@ -38,6 +47,7 @@ export default {
   },
   data() {
     return {
+      searchFormHeight: 126,
       SearchFormItems: [...SearchFormItems],
       columns: [...columns],
       CommonFormDialogItems: [...CommonFormDialogItems],
@@ -69,6 +79,10 @@ export default {
     };
   },
   methods: {
+    getSearchFormHeight(height) {
+      console.log("监控", height)
+      this.searchFormHeight = height;
+    },
     //////////////表格操作单个数据status/////////////////////////////////////////////////////////////////////////////////////////
     updateStatus(id, status) {
       console.log(id, status);

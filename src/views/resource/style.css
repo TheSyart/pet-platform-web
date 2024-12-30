@@ -39,6 +39,8 @@ body {
 
 .table-container {
   border: 1px solid #dcdfe6;
+  height: 100%;
+  /* height: calc(100vh - 60px -50px -127px -30px); */
   /* 可选：边框样式 */
   border-radius: 10px;
   /* 可选：边框圆角 */

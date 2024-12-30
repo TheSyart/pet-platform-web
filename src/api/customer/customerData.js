@@ -1,4 +1,4 @@
-import { formItemWidth, formItemMiddleWidth, gender, customerStatus } from '@/commonData/CommonData';
+import { formItemWidth, formItemMiddleWidth, gender, customerStatus } from '@/api/common/CommonData';
 
 export const SearchFormItems = [
   {

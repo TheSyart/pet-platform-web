@@ -15,9 +15,11 @@
                 </el-dropdown-menu>
             </el-dropdown>
         </el-header>
-        <el-container style="height: 100%;">
-            <el-aside style="height: 100%; width: 200px; border: 1px solid #ccc;"> <!-- 添加边框 -->
-                <el-menu :default-openeds="opened" style="height: 100%;" @open="handleOpen" @close="handleClose">
+        <el-container style=" height: calc(100vh - 60px);">
+            <el-aside style="height: 100%; width: 200px; background-color: #545c64; overflow-x: hidden;"> <!-- 添加边框 -->
+                <el-menu :default-openeds="opened" @open="handleOpen" @close="handleClose"
+                    style="height: 100%; width: 200px;" background-color="#545c64" text-color="#fff"
+                    active-text-color="#ffd04b">
                     <!-- 营销统计管理 -->
                     <el-submenu index="1">
                         <template slot="title">
@@ -149,11 +151,9 @@
                 </el-menu>
             </el-aside>
 
-            <el-main style="height: 100%; border: 1px solid #ccc;">
-                <div>
-                    <router-view></router-view> <!-- 显示路由内容的容器 -->
-                </div>
-            </el-main>
+
+            <el-main style="height: 100%;">
+                <router-view style="height: 100%;"></router-view> <!-- 显示路由内容的容器 --> </el-main>
         </el-container>
     </el-container>
 </template>

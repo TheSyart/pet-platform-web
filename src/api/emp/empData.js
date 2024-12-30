@@ -1,4 +1,4 @@
-import { formItemWidth, formItemMiddleWidth, gender, empStatus } from '@/commonData/CommonData';
+import { formItemWidth, formItemMiddleWidth, gender, empStatus } from '@/api/common/CommonData';
 
 export const SearchFormItems = [
   {
@@ -43,7 +43,7 @@ export const SearchFormItems = [
   {
     label: '入职日期',
     component: 'el-date-picker',
-    prop: 'entrydate',
+    prop: 'dateRange',
     props: {
       type: 'datetimerange',
       rangeSeparator: '至',
@@ -96,7 +96,6 @@ export const columns = [
 
 
 export const CommonFormDialogItems = [
-
   { label: "姓名", prop: "name", type: "el-input", props: { autocomplete: "off", disabled: true }, edit: true, isDate: false },
   { label: "电话", prop: "phone", type: "el-input", props: { autocomplete: "off", disabled: true }, edit: true, isDate: false },
   {
@@ -135,7 +134,7 @@ export const CommonFormDialogItems = [
     edit: true,
     isDate: false
   }
-]
+];
 
 export const AddFormDialogItems = [
   { label: "姓名", prop: "name", type: "el-input", props: { autocomplete: "off" }, disabled: false, isDate: false },
@@ -174,5 +173,5 @@ export const AddFormDialogItems = [
     disabled: false,
     isDate: false
   },
-]
+];
 
