@@ -8,3 +8,15 @@ export function deleteFile(data) {
     data
   });
 }
+
+//上传照片
+export function uploadPic(formData) {
+  return request({
+    url: `/handlePic/webUpload`,
+    method: 'post',
+    headers: {
+      "Content-Type": "multipart/form-data"
+    },
+    data: formData
+  });
+}

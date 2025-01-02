@@ -2,7 +2,7 @@
   <div ref="searchFormRef">
     <el-form :inline="true" :model="localSearchForm" @submit.native.prevent="onSubmit">
       <el-form-item :label="item.label" v-for="(item, index) in formItems" :key="index">
-        <component :is="item.component" v-model="localSearchForm[item.prop]" v-bind="item.props">
+        <component :is="item.component" v-model="localSearchForm[item.prop]" v-bind="item.props" value-format="yyyy-MM-dd HH:mm:ss">
           <!-- 如果是 el-select，插入选项 -->
           <template v-if="item.component === 'el-select'">
             <el-option v-for="(opt, optIndex) in item.options" :key="optIndex" :label="opt" :value="optIndex" />

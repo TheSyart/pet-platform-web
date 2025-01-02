@@ -57,6 +57,18 @@ export const petStatus = [
   '删除'
 ];
 
+export const encyclopediaStatus = [
+  '上架中',
+  '下架中',
+  '删除'
+];
+
+export const feedingStatus = [
+  '上架中',
+  '下架中',
+  '删除'
+];
+
 export const pickMethod = [
   '送货上门',
   '线下自提',

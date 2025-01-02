@@ -16,10 +16,9 @@
             </el-dropdown>
         </el-header>
         <el-container style=" height: calc(100vh - 60px);">
-            <el-aside style="height: 100%; width: 200px; background-color: #545c64; overflow-x: hidden;"> <!-- 添加边框 -->
-                <el-menu :default-openeds="opened" @open="handleOpen" @close="handleClose"
-                    style="height: 100%; width: 200px;" background-color="#545c64" text-color="#fff"
-                    active-text-color="#ffd04b">
+            <el-aside style="height: 100%; width: 200px; background-color: #545c64; "> <!-- 添加边框 -->
+                <el-menu style="height: 100%; width: 200px;" background-color="#545c64" text-color="#fff"
+                    active-text-color="#ffd04b" :unique-opened="true">
                     <!-- 营销统计管理 -->
                     <el-submenu index="1">
                         <template slot="title">
@@ -68,6 +67,11 @@
                                     <el-menu-item index="2-3" v-if="hasPermission('dynamicsPage')">客户动态</el-menu-item>
                                 </div>
                             </router-link>
+                            <router-link to="/converse" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="2-4" v-if="hasPermission('conversePage')">客户会话</el-menu-item>
+                                </div>
+                            </router-link>
                         </el-menu-item-group>
                     </el-submenu>
 
@@ -88,9 +92,9 @@
                                         v-if="hasPermission('encyclopediaPage')">宠物百科</el-menu-item>
                                 </div>
                             </router-link>
-                            <router-link to="/skill" v-slot="{ navigate, href }" custom>
+                            <router-link to="/feeding" v-slot="{ navigate, href }" custom>
                                 <div style="text-decoration: none;" @click="navigate" :href="href">
-                                    <el-menu-item index="3-3" v-if="hasPermission('skillPage')">喂养技巧</el-menu-item>
+                                    <el-menu-item index="3-3" v-if="hasPermission('feedingPage')">喂养技巧</el-menu-item>
                                 </div>
                             </router-link>
                         </el-menu-item-group>
@@ -150,41 +154,27 @@
                     </el-submenu>
                 </el-menu>
             </el-aside>
-
-
             <el-main style="height: 100%;">
-                <router-view style="height: 100%;"></router-view> <!-- 显示路由内容的容器 --> </el-main>
+                <router-view style="height: 100%;"></router-view> <!-- 显示路由内容的容器 -->
+            </el-main>
         </el-container>
     </el-container>
 </template>
 
 <script>
 import store from '@/store';
+import WebSocketService from '@/utils/WebSocketService';
 export default {
     data() {
         return {
             EmpPermission: [],
-            opened: ['1'], // 默认展开第一个菜单
             name: ''
         };
     },
     methods: {
-        handleOpen(index) {
-            // 菜单项打开时，将 index 添加到 opened
-            if (!this.opened.includes(index)) {
-                this.opened.push(index);
-            }
-        },
-        handleClose(index) {
-            // 菜单项关闭时，将 index 从 opened 中移除
-            const idx = this.opened.indexOf(index);
-            if (idx !== -1) {
-                this.opened.splice(idx, 1);
-            }
-        },
         loginBack() {
-            // // 清除本地存储
-            // localStorage.clear();
+            // 清除本地存储
+            localStorage.clear();
             this.name = ''; // 清空名字
             this.$router.push('/login');
         },
@@ -202,6 +192,9 @@ export default {
         const globalVar = store.getters.getGlobalVar;
         this.name = globalVar.name;
         this.EmpPermission = globalVar.permission || []; // 获取用户权限数组 
+
+        // 组件加载时连接 WebSocket
+        WebSocketService.connect('alice');
     }
 };
 </script>

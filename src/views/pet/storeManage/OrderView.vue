@@ -118,8 +118,8 @@ export default {
       this.searchForm.orderStatus = formData.orderStatus;
       this.searchForm.pickMethod = formData.pickMethod;
       this.searchForm.status = formData.status;
-      this.searchForm.begin = formData.dateRange[0] ? this.$formatDateTime(formData.dateRange[0]) : '';
-      this.searchForm.end = formData.dateRange[1] ? this.$formatDateTime(formData.dateRange[1]) : '';
+      this.searchForm.begin = formData.dateRange[0];
+      this.searchForm.end = formData.dateRange[1];
       this.updateConditions();
     },
     updateConditions() {

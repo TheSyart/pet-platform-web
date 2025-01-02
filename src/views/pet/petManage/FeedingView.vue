@@ -1,30 +1,30 @@
 <template>
   <el-main>
     <!-- 表单 -->
-    <SearchForm :searchForm="searchForm" :formItems="SearchFormItems" @submit="onSubmit" @get-search-form-height="getSearchFormHeight" />
+    <SearchForm :searchForm="searchForm" :formItems="SearchFormItems" @submit="onSubmit"
+      @get-search-form-height="getSearchFormHeight" />
 
     <el-button type="primary" size="small" plain round @click="addDialogVisible = true"
-      style="height:30px;">新增员工</el-button>
+      style="height:30px;">新增宠物喂养技巧</el-button>
 
-    <CommonFormDialog title="员工信息" :status="CommonFormButtonStatus" :visible.sync="dialogVisible"
+    <CommonFormDialog title="宠物百科信息" :status="CommonFormButtonStatus" :visible.sync="dialogVisible"
       :formItems="CommonFormDialogItems" :formData="OneObject" formLabelWidth="100px" @close="clearOneInfoForm"
-      @confirm="handleViewConfirm" :fetchUpdate="updateEmp" />
+      @confirm="handleViewConfirm" :fetchUpdate="updateFeeding" />
 
-    <AddFormDialog title="新增员工" :addForm="addForm" :visible.sync="addDialogVisible" :formItems="AddFormDialogItems"
-      formLabelWidth="100px" :fetchInsert="insertOneEmp" @close="closeAddForm" @cancel="handleAddCancel"
+    <AddFormDialog title="新增宠物百科" :addForm="addForm" :visible.sync="addDialogVisible" :formItems="AddFormDialogItems"
+      formLabelWidth="100px" :fetchInsert="insertOneFeeding" @close="closeAddForm" @cancel="handleAddCancel"
       @confirm="handleAddConfirm" />
 
 
-    <TablePagination :tableHeight="tableHight" :columns="columns" :conditions="conditions" @fetch-single-data="handleSingleData"
-      @updateStatus="updateStatus" :fetchAllInfo="pageQueryEmp" />
+    <TablePagination :tableHeight="tableHight" :columns="columns" :conditions="conditions"
+      @fetch-single-data="handleSingleData" @updateStatus="updateStatus" :fetchAllInfo="pageQueryFeeding" />
   </el-main>
 </template>
 
 <script>
-import { fetchData } from '@/api/common/dataFetcher';
-import { SearchFormItems, columns, CommonFormDialogItems, AddFormDialogItems } from '@/api/emp/empData';
-import { pageQueryEmp, queryOneEmp, insertOneEmp, updateEmpStatus, updateEmp, deleteEmp } from '@/api/emp/empApi';
-import { Message } from 'element-ui'; 
+import { SearchFormItems, columns, CommonFormDialogItems, AddFormDialogItems } from '@/api/feeding/feedingData';
+import { pageQueryFeeding, queryOneFeeding, insertOneFeeding, updateFeedingStatus, updateFeeding, deleteFeeding } from '@/api/feeding/feedingApi';
+import { Message } from 'element-ui';
 import SearchForm from '@/components/SearchForm.vue';
 import CommonFormDialog from "@/components/CommonFormDialog.vue";
 import AddFormDialog from "@/components/AddFormDialog.vue";
@@ -58,31 +58,24 @@ export default {
       OneObject: {  // 查询单条数据的载体
       },
       conditions: {   //分页查询请求体
-        name: '',
-        gender: '',
+        title: "",
+        status: "",
         begin: '',
-        end: '',
-        job: '',
-        status: ''
+        end: ''
       },
       searchForm: {   //searchForm组件的数据载体
         dateRange: [],
-        name: "",
-        gender: "",
+        title: "",
+        status: "",
         begin: '',
-        end: '',
-        job: "",
-        status: ""
+        end: ''
       },
       addForm: {  //新增员工表单数据
-        name: '',
-        gender: "",
-        job: "",
-        phone: "",
-        birth: "",
-        image: ""
+        title: '',
+        content: '',
+        image: ''
       },
-      jobMap: [],
+      petBreeds: [],
     };
   },
   watch: {    //监听查询单个的值，返回给CommonFormDialogItems下的一些值
@@ -91,9 +84,9 @@ export default {
         if (item.prop === 'image') {
           item.props.imageUrl = newValue.image;
           item.props.id = newValue.id;
-          item.props.fetchDelete = deleteEmp
+          item.props.fetchDelete = deleteFeeding
         }
-     });
+      });
     }
   },
   methods: {
@@ -109,12 +102,10 @@ export default {
     resetSearchForm() {
       this.searchForm = {
         dateRange: [],
-        name: "",
-        gender: "",
+        title: "",
+        status: "",
         begin: '',
-        end: '',
-        job: "",
-        status: ""
+        end: ''
       };
       // 如果需要更新条件以触发子组件的 watch
       this.updateConditions();
@@ -126,9 +117,8 @@ export default {
       if (formData.dateRange == null) {
         formData.dateRange = [];
       }
-      this.searchForm.name = formData.name;
-      this.searchForm.gender = formData.gender;
-      this.searchForm.job = formData.job;
+      console.log(JSON.stringify(formData));
+      this.searchForm.title = formData.title;
       this.searchForm.status = formData.status;
       this.searchForm.begin = formData.dateRange[0];
       this.searchForm.end = formData.dateRange[1];
@@ -177,29 +167,25 @@ export default {
 
     resetAddForm() {
       this.addForm = {
-        name: '',
-        gender: "",
-        job: "",
-        phone: "",
-        birth: "",
-        image: ""
+        title: '',
+        content: '',
+        image: ''
       }
     },
-
     ////////////该界面所用api函数 //////////////////////////////////////////////////////////////////////////
-    pageQueryEmp,
-    insertOneEmp,
-    updateEmp,
-    deleteEmp,
+    pageQueryFeeding,
+    insertOneFeeding,
+    updateFeeding,
+    deleteFeeding,
     async fetchOneInfo(id) {
       try {
-        const response = await queryOneEmp(id);
+        const response = await queryOneFeeding(id);
         this.OneObject = { ...response.data };
         //获得值打开对话框
         this.dialogVisible = true;
 
       } catch (error) {
-        console.error('获取单个员工信息失败:', error);
+        console.error('获取单个宠物喂养技巧信息失败:', error);
       }
     },
     async fetchOneStatus(id, status) {
@@ -208,46 +194,14 @@ export default {
           id: id,
           status: status
         };
-        const response = await updateEmpStatus(data);
+        const response = await updateFeedingStatus(data);
         //清空数据,重新加载数据
         this.resetSearchForm();
         Message.success(response.data);   //提示成功
       } catch (error) {
-        console.error('员工状态操作失败:', error);
+        console.error('宠物喂养技巧状态操作失败:', error);
       }
     },
-    async fetchDataOptions() {
-      try {
-        const jobData = await fetchData('empJob');
-        this.jobMap = jobData;
-        this.SearchFormItems.forEach(item => {
-          if (item.prop === 'job') {
-            item.options = this.jobMap;
-          }
-        });
-        this.columns.forEach((item) => {
-          if (item.prop === 'job') {
-            item.details = this.jobMap;
-          }
-        });
-        this.CommonFormDialogItems.forEach(item => {
-          if (item.prop === 'job') {
-            item.options = this.jobMap;
-          }
-        });
-        this.AddFormDialogItems.forEach((item) => {
-          if (item.prop === 'job') {
-            item.options = this.jobMap;
-          }
-        });
-      } catch (error) {
-        console.error('Failed to fetch job options:', error);
-        Message.error('职位数据获取失败，请重试');
-      }
-    }
-  },
-  created() {
-    this.fetchDataOptions();
   }
 };
 </script>

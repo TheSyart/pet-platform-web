@@ -144,7 +144,7 @@ export const CommonFormDialogItems = [
   },
   {
     label: "头像",
-    prop: "image_path",
+    prop: "image",
     type: "ImgUploader",
     props: { type: 'mypet', imageUrl: '', id: '', disabled: true },
     edit: true,

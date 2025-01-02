@@ -44,8 +44,14 @@ const routes = [
       {
         path: '/dynamics',
         name: 'dynamics',
-        component: () => import('../views/pet/peopleManage/CustomerDynamics.vue'),
+        component: () => import('../views/pet/peopleManage/DynamicsView.vue'),
         meta: { requiresAuth: true, permission: ['dynamicsPage'] }
+      },
+      {
+        path: '/converse',
+        name: 'converse',
+        component: () => import('../views/pet/peopleManage/ConverseView.vue'),
+        meta: { requiresAuth: true, permission: ['conversePage'] }
       },
       {
         path: '/pet',
@@ -60,10 +66,10 @@ const routes = [
         meta: { requiresAuth: true, permission: ['encyclopediaPage'] }
       },
       {
-        path: '/skill',
-        name: 'skill',
-        component: () => import('../views/pet/petManage/SkillView.vue'),
-        meta: { requiresAuth: true, permission: ['skillPage'] }
+        path: '/feeding',
+        name: 'feeding',
+        component: () => import('../views/pet/petManage/FeedingView.vue'),
+        meta: { requiresAuth: true, permission: ['feedingPage'] }
       },
       {
         path: '/shopping',

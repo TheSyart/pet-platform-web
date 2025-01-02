@@ -93,8 +93,8 @@ export default {
       this.searchForm.accountType = formData.accountType;
       this.searchForm.loginType = formData.loginType;
       this.searchForm.result = formData.result;
-      this.searchForm.begin = formData.dateRange[0] ? this.$formatDateTime(formData.dateRange[0]) : '';
-      this.searchForm.end = formData.dateRange[1] ? this.$formatDateTime(formData.dateRange[1]) : '';
+      this.searchForm.begin = formData.dateRange[0];
+      this.searchForm.end = formData.dateRange[1];
 
       this.updateConditions();
     },

@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { uploadPic } from "@/api/common/image";
 import { Message } from "element-ui";
 import { deleteFile } from '@/api/common/image';
 export default {
@@ -42,7 +42,8 @@ export default {
     },
     disabled: {
       type: Boolean,
-      required: true,
+      required: false,
+      default: false,
     },
     imageUrl: {
       type: String,
@@ -60,7 +61,6 @@ export default {
   },
   data() {
     return {
-      uploadUrl: "/api/handlePic/webUpload", // 上传路径
       uploadBackPath: "",
       internalImageUrl: this.imageUrl, // 用于展示的图片路径
       hovered: false, // 控制悬浮状态
@@ -99,27 +99,20 @@ export default {
       }
       return false;
     },
-    uploadFile(file) {
+    async uploadFile(file) {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("dir", this.type);
 
-      axios
-        .post(this.uploadUrl, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            token: `${localStorage.getItem("jwt")}`,
-          },
-        })
-        .then((response) => {
-          const backPath = response.data.data
-          Message.success("照片上传成功!");
-          this.uploadBackPath = backPath;         //保存返回路径
-          this.$emit("upload-success", backPath); // 通知父组件上传成功
-        })
-        .catch((error) => {
-          Message.error("照片上传失败" + error + "!");
-        });
+      try {
+         const response = await uploadPic(formData);
+
+         Message.success("照片上传成功!");
+          this.uploadBackPath = response.data;         //保存返回路径
+          this.$emit("upload-success", this.uploadBackPath); // 通知父组件上传成功
+      } catch (error) {
+        Message.error("照片上传失败" + error + "!");
+      }
     },
     clearImage() {
       if (this.internalImageUrl) {

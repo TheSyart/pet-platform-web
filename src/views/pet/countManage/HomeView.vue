@@ -76,17 +76,6 @@
               <div><el-tag type="warning">宠物服务: {{ orderData[1]?.ing + orderData[1]?.timeout || 0 }}单</el-tag></div>
             </el-collapse-item>
           </el-collapse>
-          <!-- <div>
-            <el-row>
-              <el-col :span="8">总访问量:</el-col>
-              <el-col :span="16" v-if="loginData.length > 0">{{ this.loginData[0].total }}</el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="8">总营业额:</el-col>
-              <el-col :span="16" v-if="orderData.length > 0">{{ this.orderData[0].totalPrice +
-                this.orderData[1].totalPrice}}</el-col>
-            </el-row>
-          </div> -->
         </el-card>
       </div>
       <div style="display: flex; flex: 1;">
@@ -199,39 +188,52 @@ export default {
       });
     },
     async getInformation() {
-      const start = this.$formatDateTime(this.start);
-      const end = this.$formatDateTime(this.end)
+      const start = this.formatDateTime(this.start);
+      const end = this.formatDateTime(this.end)
       const params = { start: start, end: end };
 
       try {
         const response = await loginCount(params);
         this.loginData = response.data;
         this.updateChartData(
-            this.loginData,
-            'loginCategory',
-            ['total', 'success', 'failed'],
-            this.loginOptions
-          );
+          this.loginData,
+          'loginCategory',
+          ['total', 'success', 'failed'],
+          this.loginOptions
+        );
 
-          this.loginTypeMap = this.loginType;
-          this.resultMap = this.result;
-          this.accountTypeMap = this.accountType;
+        this.loginTypeMap = this.loginType;
+        this.resultMap = this.result;
+        this.accountTypeMap = this.accountType;
       } catch (error) {
         console.error('错误:', error);
       }
 
       try {
         const response = await orderCount(params);
-        this.orderData =response.data;
-          this.updateChartData(
-            this.orderData,
-            'orderCategory',
-            ['totalOrder', 'finishing', 'removing', 'remove', 'finish', 'timeout'],
-            this.orderOptions
-          );
+        this.orderData = response.data;
+        this.updateChartData(
+          this.orderData,
+          'orderCategory',
+          ['totalOrder', 'finishing', 'removing', 'remove', 'finish', 'timeout'],
+          this.orderOptions
+        );
       } catch (error) {
         console.error('错误:', error);
       }
+    },
+    formatDateTime(date) {
+      return date
+        ? new Intl.DateTimeFormat('zh-CN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          timeZone: 'Asia/Shanghai', // 明确指定时区
+        }).format(new Date(date)).replace(/\//g, '-')
+        : '';
     },
   },
   mounted() {

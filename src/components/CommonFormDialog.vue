@@ -1,12 +1,13 @@
 <template>
-    <el-dialog :title="title" :visible="visible" @close="handleClose" width="1400px">
+    <el-dialog :title="title" :visible="visible" @close="handleClose" >
         <el-form :model="localFormData" class="form-container">
             <!-- 动态生成表单项 -->
             <div v-for="(item, index) in filteredFormItems" :key="index" class="form-item-wrapper"
                 :class="{ 'full-width-item': item.fullWidth }">
-                <el-form-item :label="item.label" label-width="80px">
+                <el-form-item :label="item.label" label-width="100px">
                     <!-- el-input -->
                     <el-input v-if="item.type === 'el-input'" v-model="localFormData[item.prop]" v-bind="item.props">
+                        <template v-if="item.unit" slot="append">{{ item.unit }}</template>
                     </el-input>
 
                     <!-- el-select -->
@@ -153,7 +154,6 @@ export default {
     data() {
         return {
             centerPoint: [117.24619443753649, 31.815551443626454], // 示例起点坐标
-            // targetPoint: [117.324299, 31.892035], // 示例终点坐标
             localFormData: { ...this.formData },
             submitDisabled: true,
             initialImageData: this.formData.image, // 新增属性，用于存储初始图片路径
@@ -238,7 +238,7 @@ export default {
 
             // 检查图片路径是否发生变化
             if (data.image === this.initialImageData) {
-                delete data.image; // 如果图片路径没有变化，则删除 image 字段
+                delete data.image; // 如果图片路径没有变化，则删除
             }
             this.updateOneInfo(data);
         },

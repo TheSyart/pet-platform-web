@@ -2,25 +2,69 @@
     <el-dialog :title="title" :visible="visible" @close="handleClose">
         <el-form :model="localFormData" :label-width="formLabelWidth" class="form-container">
 
-            <div v-for="(item, index) in formItems" :key="index" class="form-item-wrapper">
-                <el-form-item :label="item.label" :label-width="formLabelWidth">
-                    <component :is="item.type" v-model="localFormData[item.prop]" v-bind="item.props"
-                        :disabled="item.disabled" @upload-success="handleUploadSuccess"
-                        :ref="el => { if (el) imgUploaderRefs[index] = el }">
+            <!-- 动态生成表单项 -->
+            <div v-for="(item, index) in filteredFormItems" :key="index" class="form-item-wrapper"
+                :class="{ 'full-width-item': item.fullWidth }">
+                <el-form-item :label="item.label" label-width="100px">
+                    <!-- el-input -->
+                    <el-input v-if="item.type === 'el-input'" v-model="localFormData[item.prop]" v-bind="item.props">
+                        <template v-if="item.unit" slot="append">{{ item.unit }}</template>
+                    </el-input>
 
-                        <template v-if="item.type === 'el-select'">
-                            <el-option v-for="(opt, optIndex) in item.options" :key="optIndex" :label="opt"
-                                :value="optIndex" />
-                        </template>
+                    <!-- el-select -->
+                    <el-select v-if="item.type === 'el-select'" v-model="localFormData[item.prop]" v-bind="item.props">
+                        <el-option v-for="(opt, optIndex) in item.options" :key="optIndex" :label="opt"
+                            :value="optIndex" />
+                    </el-select>
 
+                    <!-- el-radio-group -->
+                    <el-radio-group v-if="item.type === 'el-radio-group'" v-model="localFormData[item.prop]"
+                        v-bind="item.props">
+                        <el-radio v-for="(radio, radioIndex) in item.options" :key="radioIndex" :label="radio.value">
+                            {{ radio.label }}
+                        </el-radio>
+                    </el-radio-group>
 
-                        <ImgUploader v-if="item.type === 'ImgUploader'">
-                        </ImgUploader>
-                    </component>
+                    <!-- el-checkbox-group -->
+                    <el-checkbox-group v-if="item.type === 'el-checkbox-group'" v-model="localFormData[item.prop]"
+                        v-bind="item.props">
+                        <el-checkbox v-for="(checkbox, checkboxIndex) in item.options" :key="checkboxIndex"
+                            :label="checkbox.value">
+                            {{ checkbox.label }}
+                        </el-checkbox>
+                    </el-checkbox-group>
 
+                    <!-- el-date-picker -->
+                    <el-date-picker v-if="item.type === 'el-date-picker'" v-model="localFormData[item.prop]"
+                        v-bind="item.props" type="date">
+                    </el-date-picker>
 
+                    <!-- ImgUploader -->
+                    <ImgUploader v-if="item.type === 'ImgUploader'" @upload-success="handleUploadSuccess"
+                        v-bind="item.props">
+                    </ImgUploader>
 
+                    <!-- el-table -->
+                    <el-table v-if="item.type === 'el-table'" :data="localFormData[item.prop]" v-bind="item.props">
+                        <el-table-column v-for="(col, index) in item.columns" :key="index" :prop="col.prop"
+                            :label="col.label" :width="col.width" :align="col.align || 'center'">
+                        </el-table-column>
+                    </el-table>
 
+                    <!-- el-button -->
+                    <el-button v-if="item.type === 'el-button'" v-bind="item.props" :icon="item.icon"
+                        @click="openDialog(item.formConfig)">
+                        {{ item.label }}
+                    </el-button>
+
+                    <!-- el-steps -->
+                    <el-steps v-if="item.type === 'el-steps' && localFormData[item.prop]"
+                        :active="localFormData[item.prop]?.length" v-bind="item.props">
+                        <el-step v-for="(step, index) in localFormData[item.prop]" :key="index"
+                            :title="item.data[item.stepProp.title][step[item.stepProp.title]]"
+                            :description="getDescription(step, item.stepProp.description, item.data)">
+                        </el-step>
+                    </el-steps>
                 </el-form-item>
             </div>
 
@@ -71,6 +115,11 @@ export default {
         },
 
     },
+    computed: {
+        filteredFormItems() {
+            return this.formItems.filter(item => this.shouldShowItem(item));
+        }
+    },
     data() {
         return {
             localFormData: { ...this.addForm },
@@ -86,6 +135,13 @@ export default {
         },
     },
     methods: {
+        shouldShowItem(item) {
+            if (!item.show) {
+                return true; // 如果没有 show 属性，默认显示
+            }
+            const { basis, value } = item.show;
+            return this.localFormData[basis] === value;
+        },
         handleUploadSuccess(responseData) {
             console.log('照片回传地址:', responseData);
             this.localFormData.image = responseData; // 将响应数据保存到本地表单数据
@@ -139,9 +195,7 @@ export default {
 .form-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    /* 每行显示2个表单项 */
     grid-gap: 20px;
-    /* 控制每个表单项之间的间距 */
 }
 
 .form-item-wrapper {
@@ -149,16 +203,17 @@ export default {
     width: 100%;
 }
 
-/* 统一设置每个表单项的宽度 */
+.full-width-item {
+    grid-column: span 3;
+}
+
 .el-form-item__content {
     width: 100% !important;
-    /* 确保内容区域宽度一致 */
 }
 
 .el-input,
 .el-select,
 .el-date-picker {
     width: 100% !important;
-    /* 确保各个组件宽度一致 */
 }
 </style>

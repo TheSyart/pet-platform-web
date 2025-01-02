@@ -172,6 +172,6 @@ export const AddFormDialogItems = [
     props: { type: 'emp' },
     disabled: false,
     isDate: false
-  },
+  }
 ];
 
