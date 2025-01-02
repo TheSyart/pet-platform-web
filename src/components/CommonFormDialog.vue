@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="title" :visible="visible" @close="handleClose" >
+    <el-dialog :title="title" :visible="visible" @close="handleClose">
         <el-form :model="localFormData" class="form-container">
             <!-- 动态生成表单项 -->
             <div v-for="(item, index) in filteredFormItems" :key="index" class="form-item-wrapper"
@@ -9,6 +9,10 @@
                     <el-input v-if="item.type === 'el-input'" v-model="localFormData[item.prop]" v-bind="item.props">
                         <template v-if="item.unit" slot="append">{{ item.unit }}</template>
                     </el-input>
+
+                    <!-- el-input-number -->
+                    <el-input-number v-if="item.type === 'el-input-number'" v-model="localFormData[item.prop]" v-bind="item.props">
+                    </el-input-number>
 
                     <!-- el-select -->
                     <el-select v-if="item.type === 'el-select'" v-model="localFormData[item.prop]" v-bind="item.props">
@@ -190,7 +194,7 @@ export default {
     methods: {
         getDescription(step, descriptionProps, data) {
             return descriptionProps.map(prop =>
-            data[prop] ? data[prop][step[prop]] : step[prop]
+                data[prop] ? data[prop][step[prop]] : step[prop]
             ).join(' ');
         },
         openDialog(formConfig) {
@@ -259,7 +263,7 @@ export default {
     },
     created() {
         console.log("CommonFormDialog created", this.formItems);
-    },
+    }
 };
 </script>
 

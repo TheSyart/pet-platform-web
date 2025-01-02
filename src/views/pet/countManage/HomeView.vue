@@ -97,7 +97,7 @@
 
 <script>
 import { loginCount, orderCount } from '@/api/home/homeApi.js';
-import CommonData from '../../../api/common/CommonData.js';
+import { loginType, result, accountType } from '@/api/common/CommonData';
 import EChart from '../../../components/EChart.vue';
 import { loginOptions, orderOptions } from '@/api/home/homeData.js';
 export default {
@@ -108,10 +108,9 @@ export default {
     return {
       loginOptions: loginOptions,
       orderOptions: orderOptions,
-      ...CommonData,
-      loginTypeMap: [],
-      resultMap: [],
-      accountTypeMap: [],
+      loginTypeMap: loginType,
+      resultMap: result,
+      accountTypeMap: accountType,
       loginData: [],
       orderData: [],
       start: '',  //筛选时间的参数
@@ -201,10 +200,6 @@ export default {
           ['total', 'success', 'failed'],
           this.loginOptions
         );
-
-        this.loginTypeMap = this.loginType;
-        this.resultMap = this.result;
-        this.accountTypeMap = this.accountType;
       } catch (error) {
         console.error('错误:', error);
       }

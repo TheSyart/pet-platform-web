@@ -11,6 +11,11 @@
                         <template v-if="item.unit" slot="append">{{ item.unit }}</template>
                     </el-input>
 
+                    <!-- el-input-number -->
+                    <el-input-number v-if="item.type === 'el-input-number'" v-model="localFormData[item.prop]"
+                        v-bind="item.props">
+                    </el-input-number>
+
                     <!-- el-select -->
                     <el-select v-if="item.type === 'el-select'" v-model="localFormData[item.prop]" v-bind="item.props">
                         <el-option v-for="(opt, optIndex) in item.options" :key="optIndex" :label="opt"

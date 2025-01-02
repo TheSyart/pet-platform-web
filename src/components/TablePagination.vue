@@ -3,7 +3,7 @@
     <!-- 引用封装的 MessageDialog 组件 -->
     <MessageDialog ref="messageDialog" />
     <el-table :height="tableHeight" :data="data" class="table-container" border align="center" header-align="center"
-      :header-cell-style="{ backgroundColor: '#f5f5f5', color: '#333' }" >
+      :header-cell-style="{ backgroundColor: '#f5f5f5', color: '#333' }">
       <el-table-column v-for="(col, index) in columns" :key="index" :prop="col.prop" :label="col.label"
         :width="col.width" :align="col.align || 'center'" v-bind="col.props">
 
@@ -21,6 +21,10 @@
           <template v-else-if="col.type === 'tag'">
             <el-tag :type="col.details[0].color[row.status]" size="mini">
               {{ col.details[0].name[row.status] }} </el-tag>
+            <el-tag v-for="(detail, index) in filteredDetails(col.details[1], row)" :key="index" :type="detail.color"
+              size="mini">
+              {{ detail.name }}
+            </el-tag>
           </template>
 
           <!-- 特定操作列的转化(order) -->
@@ -110,6 +114,30 @@ export default {
     fetchAllInfo: {
       type: Function,
       required: true,
+    }
+  },
+  computed: {
+    filteredDetails() {
+      return (details, row) => {
+        
+        if(!details){
+          return [];
+        }
+    
+        const { name, extra, value, color } = details;
+        // 将对象拆分为数组
+        const filteredArray = name.map((nameItem, index) => ({
+          name: nameItem,
+          extra: extra[index],
+          value: value[index],
+          color: color[index],
+        })).filter(detail => {
+          // 检查 extra 和 value 是否匹配
+          return row[detail.extra] === detail.value;
+        });
+        // 如果过滤后的数组为空，返回空数组
+        return filteredArray.length > 0 ? filteredArray : [];
+      }
     }
   },
   data() {

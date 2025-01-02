@@ -45,7 +45,6 @@ import { queryAllOrderInfoDetailsCount, queryAllShoppingSale } from '../../../ap
 import { shoppingSaleOptions, serviceMostSaleOptions, shoppingMostSaleOptions, serviceSaleOptions } from '../../../api/sale/saleData.js';
 import { fetchData } from '../../../api/common/dataFetcher.js';
 import { orderType } from '../../../api/common/CommonData.js';
-import CommonData from '../../../api/common/CommonData.js';
 import EChart from '../../../components/EChart.vue';
 export default {
   components: {
@@ -57,7 +56,6 @@ export default {
       serviceMostSaleOptions: serviceMostSaleOptions,
       shoppingMostSaleOptions: shoppingMostSaleOptions,
       serviceSaleOptions: serviceSaleOptions,
-      ...CommonData,
       orderTypeMap: orderType,
       shoppingTypeMap: [],
       serviceTypeMap: [],
