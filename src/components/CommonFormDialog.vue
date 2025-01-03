@@ -1,10 +1,10 @@
 <template>
     <el-dialog :title="title" :visible="visible" @close="handleClose">
-        <el-form :model="localFormData" class="form-container">
+        <el-form :model="localFormData" class="form-container" status-icon :rules="rule" ref="commonForm">
             <!-- 动态生成表单项 -->
             <div v-for="(item, index) in filteredFormItems" :key="index" class="form-item-wrapper"
                 :class="{ 'full-width-item': item.fullWidth }">
-                <el-form-item :label="item.label" label-width="100px">
+                <el-form-item :label="item.label" label-width="100px" :prop="item.prop">
                     <!-- el-input -->
                     <el-input v-if="item.type === 'el-input'" v-model="localFormData[item.prop]" v-bind="item.props">
                         <template v-if="item.unit" slot="append">{{ item.unit }}</template>
@@ -45,7 +45,7 @@
 
                     <!-- ImgUploader -->
                     <ImgUploader v-if="item.type === 'ImgUploader'" ref="ImgUploader"
-                        @upload-success="handleUploadSuccess" v-bind="item.props">
+                        @upload-success="handleUploadSuccess" @clearImage="handleClearImage" v-bind="item.props">
                     </ImgUploader>
 
                     <!-- el-table -->
@@ -135,6 +135,10 @@ export default {
             type: String,
             required: true,
         },
+        rule: {
+            type: Object,
+            required: true
+        },
         status: {
             type: String,
             required: true,
@@ -164,8 +168,8 @@ export default {
             submitDisabled: true,
             initialImageData: this.formData.image, // 用于存储初始图片路径
             dialogVisible: false,
-            currentDialogConfig: {
-            }
+            currentDialogConfig: {},
+            imagePassed: false  //判断照片回调地址，是否上传，如果没有将在关闭对话框时清除
         };
     },
     computed: {
@@ -223,9 +227,9 @@ export default {
             console.log("开始编辑", JSON.stringify(this.formData));
         },
         handleClose() {
-          // 上传照片后，并没有保存，在关闭时，自动删除文件中上传照片
-          console.log("uploadBackPath",this.$refs.ImgUploader[0].uploadBackPath);
-            if (this.$refs.ImgUploader[0].uploadBackPath) {
+            console.log("cccccccccccc",this.imagePassed);
+            // 上传照片后，并没有保存，在关闭时，自动删除文件中上传照片
+            if (!this.imagePassed && this.$refs.ImgUploader[0].uploadBackPath) {
                 this.$refs.ImgUploader[0].deleteImage();
             }
 
@@ -235,29 +239,40 @@ export default {
                     item.props.disabled = true;
                 }
             });
+            this.$refs.commonForm.resetFields(); // 重置表单字段
+
+            this.$refs.ImgUploader[0].uploadBackPath = '';   // 因为imageUploader组件在我再次打开时，不会重置，所以手动清空路径
+            this.imagePassed = false;  // 重置照片上传状态
+
             this.$emit('close'); // 触发父组件的关闭事件
         },
         handleConfirm() {       //保存编辑
-            const data = this.localFormData;
-            //循环判断date是否有日期,进行标准格式转化
-            this.formItems.forEach((item) => {
-                Object.keys(data).forEach(key => {
-                    if (item.prop === key && item.isDate) {
-                        data[key] = formatDateTime(data[key]);
-                    }
-                });
-            });
+            this.$refs.commonForm.validate(async (valid) => {
+                if (valid) {
+                    const data = this.localFormData;
+                    //循环判断date是否有日期,进行标准格式转化
+                    this.formItems.forEach((item) => {
+                        Object.keys(data).forEach(key => {
+                            if (item.prop === key && item.isDate) {
+                                data[key] = formatDateTime(data[key]);
+                            }
+                        });
+                    });
 
-            // 检查图片路径是否发生变化
-            if (data.image === this.initialImageData) {
-                delete data.image; // 如果图片路径没有变化，则删除
-            }
-            this.updateOneInfo(data);
+                    // 检查图片路径是否发生变化
+                    if (data.image === this.initialImageData) {
+                        delete data.image; // 如果图片路径没有变化，则删除
+                    }
+                    this.updateOneInfo(data);
+                    this.imagePassed = true;
+                } else {
+                    Message.error('表单验证失败!');
+                }
+            });
         },
         handleUploadSuccess(image) {     //上传照片成功返回照片回传地址
             console.log('照片回传地址:', image);
             this.localFormData.image = image; // 将响应数据保存到本地表单数据
-            this.$refs.ImgUploader[0].uploadBackPath = '';  //照片商城上传完成成功后，清空照片回传地址
         },
         async updateOneInfo(date) {
             console.log("updateOneInfo", JSON.stringify(date));
@@ -268,6 +283,10 @@ export default {
             } catch (error) {
                 Message.error(error.response?.data?.message || '更新失败!');
             }
+        },
+        // imageUploader 组件 清楚照片时，同步清除localFormData.image
+        handleClearImage() {
+            this.localFormData.image = '';
         },
     }
 };

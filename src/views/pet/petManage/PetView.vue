@@ -16,7 +16,7 @@
   </template>
   
   <script>
-  import { fetchData } from '@/api/common/dataFetcher';
+  import { fetchData } from '@/api/common/dataFetcherApi';
   import { Message } from 'element-ui';
   import { SearchFormItems, columns, CommonFormDialogItems } from '@/api/pet/petData';
   import { pageQueryPet, queryOnePet } from '@/api/pet/petApi';

@@ -1,11 +1,12 @@
 <template>
     <el-dialog :title="title" :visible="visible" @close="handleClose">
-        <el-form :model="localFormData" :label-width="formLabelWidth" class="form-container">
+        <el-form :model="localFormData" :label-width="formLabelWidth" status-icon :rules="rule" class="form-container"
+            ref="addForm">
 
             <!-- 动态生成表单项 -->
             <div v-for="(item, index) in filteredFormItems" :key="index" class="form-item-wrapper"
                 :class="{ 'full-width-item': item.fullWidth }">
-                <el-form-item :label="item.label" label-width="100px">
+                <el-form-item :label="item.label" label-width="100px" :prop="item.prop">
                     <!-- el-input -->
                     <el-input v-if="item.type === 'el-input'" v-model="localFormData[item.prop]" v-bind="item.props">
                         <template v-if="item.unit" slot="append">{{ item.unit }}</template>
@@ -46,7 +47,7 @@
 
                     <!-- ImgUploader -->
                     <ImgUploader v-if="item.type === 'ImgUploader'" ref="ImgUploader"
-                        @upload-success="handleUploadSuccess" v-bind="item.props">
+                        @upload-success="handleUploadSuccess" @clearImage="handleClearImage" v-bind="item.props">
                     </ImgUploader>
 
                     <!-- el-table -->
@@ -87,6 +88,7 @@
 
 
 <script>
+import { formatDateTime } from '@/utils/commonFunction';
 import { Message } from 'element-ui'; // 使用 Element UI 的消息提示
 import ImgUploader from './ImgUploader.vue';
 export default {
@@ -97,6 +99,10 @@ export default {
         title: {
             type: String,
             required: true,
+        },
+        rule: {
+            type: Object,
+            required: true
         },
         visible: {
             type: Boolean,
@@ -151,14 +157,22 @@ export default {
             this.localFormData.image = responseData; // 将响应数据保存到本地表单数据
         },
         handleClose() {
+            this.$refs.addForm.resetFields(); // 重置表单字段
             this.$emit('close'); // 触发父组件的关闭事件
         },
         handleConfirm() {
-            this.postAddNewOne();
+            this.$refs.addForm.validate(async (valid) => {
+                if (valid) {
+                    this.postAddNewOne();
+                } else {
+                    Message.error('表单验证失败!');
+                }
+            });
+
         },
         handleCancel() {
+            this.$refs.addForm.resetFields(); // 重置表单字段
             // 调用ImgUploader组件的 clearImage 方法
-            console.log('this.$refs.ImgUploader',this.$refs.ImgUploader);
             this.$refs.ImgUploader[0].clearImage();
             this.$emit('cancel');
         },
@@ -171,7 +185,7 @@ export default {
                     Object.keys(data).forEach(key => {
                         if (item.prop === key && item.isDate) {
                             console.log(data[key]);
-                            data[key] = this.$formatDateTime(data[key]);
+                            data[key] = formatDateTime(data[key]);
                         }
                     });
                 });
@@ -187,7 +201,11 @@ export default {
             } catch (error) {
                 console.error('分页获取信息失败:', error);
             }
-        }
+        },
+        // imageUploader 组件 清楚照片时，同步清除localFormData.image
+        handleClearImage() {
+            this.localFormData.image = '';
+        },
     },
 };
 </script>

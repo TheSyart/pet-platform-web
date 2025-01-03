@@ -37,8 +37,8 @@ import { Message } from 'element-ui';
 export default {
   data() {
     return {
-      username: 'jinyong',  //双向绑定文本框输入值
-      password: '123456',
+      username: 'shanchen',
+      password: '22ShCh22',
       loading: false
     };
   },

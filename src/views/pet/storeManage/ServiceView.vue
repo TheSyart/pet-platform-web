@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { fetchData } from '@/api/common/dataFetcher';
+import { fetchData } from '@/api/common/dataFetcherApi';
 import { SearchFormItems, columns, CommonFormDialogItems, AddFormDialogItems } from '@/api/service/serviceData';
 import { pageQueryService, queryOneService, insertOneService, updateServiceStatus, updateService, deleteService } from '@/api/service/serviceApi';
 import { Message } from 'element-ui';

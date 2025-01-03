@@ -30,9 +30,9 @@
 </template>
 
 <script>
-import { uploadPic } from "@/api/common/image";
+import { uploadPic } from "@/api/common/imageApi";
 import { Message } from "element-ui";
-import { deleteFile } from '@/api/common/image';
+import { deleteFile } from '@/api/common/imageApi';
 export default {
   name: "ImgUploader",
   props: {
@@ -63,14 +63,17 @@ export default {
     return {
       uploadBackPath: "",
       internalImageUrl: this.imageUrl, // 用于展示的图片路径
+      internalImagePassed: !!this.imageUrl, //防止无初值
       hovered: false, // 控制悬浮状态
-      dialogVisible: false,
-      oo: "ss"
+      dialogVisible: false
     };
   },
   watch: {
     imageUrl(newVal) {
       this.internalImageUrl = newVal;
+      this.internalImagePassed = !!newVal;
+      console.log("imageUrl changed:", newVal);
+      console.log("internalImagePassed:", this.internalImagePassed);
     }
   },
   methods: {
@@ -98,11 +101,11 @@ export default {
       formData.append("dir", this.type);
 
       try {
-         const response = await uploadPic(formData);
+        const response = await uploadPic(formData);
 
-         Message.success("照片上传成功!");
-          this.uploadBackPath = response.data;         //保存返回路径
-          this.$emit("upload-success", this.uploadBackPath); // 通知父组件上传成功
+        Message.success("照片上传成功!");
+        this.uploadBackPath = response.data;         //保存返回路径
+        this.$emit("upload-success", this.uploadBackPath); // 通知父组件上传成功
       } catch (error) {
         Message.error("照片上传失败" + error + "!");
       }
@@ -111,6 +114,7 @@ export default {
       if (this.internalImageUrl) {
         URL.revokeObjectURL(this.internalImageUrl); // 释放内存
         this.internalImageUrl = "";
+        this.$emit("clearImage");
       }
     },
 
@@ -132,6 +136,7 @@ export default {
           data = { dir: this.internalImageUrl };
         }
 
+
         const response = await deleteFile(data);
         console.log(response);
         this.updateImage();
@@ -142,7 +147,8 @@ export default {
       }
     },
     async updateImage() {
-      if (this.id && this.fetchDelete && !this.uploadBackPath) {
+      console.log('this.internalImageUrl:', this.internalImageUrl);
+      if (this.internalImagePassed && this.internalImageUrl) {
         try {
           const response = await this.fetchDelete(this.id);
           Message.success(response.data || "照片删除成功!");

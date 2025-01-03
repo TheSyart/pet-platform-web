@@ -1,30 +1,31 @@
 <template>
   <el-main>
     <!-- 表单 -->
-    <SearchForm :searchForm="searchForm" :formItems="SearchFormItems" @submit="onSubmit" @get-search-form-height="getSearchFormHeight" />
+    <SearchForm :searchForm="searchForm" :formItems="SearchFormItems" @submit="onSubmit"
+      @get-search-form-height="getSearchFormHeight" />
 
     <el-button type="primary" size="small" plain round @click="addDialogVisible = true"
       style="height:30px;">新增员工</el-button>
 
     <CommonFormDialog title="员工信息" :status="CommonFormButtonStatus" :visible.sync="dialogVisible"
       :formItems="CommonFormDialogItems" :formData="OneObject" formLabelWidth="100px" @close="clearOneInfoForm"
-      @confirm="handleViewConfirm" :fetchUpdate="updateEmp" />
+      @confirm="handleViewConfirm" :fetchUpdate="updateEmp" :rule="this.CommonFormDialogRules" />
 
     <AddFormDialog title="新增员工" :addForm="addForm" :visible.sync="addDialogVisible" :formItems="AddFormDialogItems"
       formLabelWidth="100px" :fetchInsert="insertOneEmp" @close="closeAddForm" @cancel="handleAddCancel"
-      @confirm="handleAddConfirm" />
+      @confirm="handleAddConfirm" :rule="this.AddFormDialogRules" />
 
 
-    <TablePagination :tableHeight="tableHight" :columns="columns" :conditions="conditions" @fetch-single-data="handleSingleData"
-      @updateStatus="updateStatus" :fetchAllInfo="pageQueryEmp" />
+    <TablePagination :tableHeight="tableHight" :columns="columns" :conditions="conditions"
+      @fetch-single-data="handleSingleData" @updateStatus="updateStatus" :fetchAllInfo="pageQueryEmp" />
   </el-main>
 </template>
 
 <script>
-import { fetchData } from '@/api/common/dataFetcher';
-import { SearchFormItems, columns, CommonFormDialogItems, AddFormDialogItems } from '@/api/emp/empData';
+import { fetchData } from '@/api/common/dataFetcherApi';
+import { SearchFormItems, columns, CommonFormDialogItems, AddFormDialogItems, CommonFormDialogRules, AddFormDialogRules } from '@/api/emp/empData';
 import { pageQueryEmp, queryOneEmp, insertOneEmp, updateEmpStatus, updateEmp, deleteEmp } from '@/api/emp/empApi';
-import { Message } from 'element-ui'; 
+import { Message } from 'element-ui';
 import SearchForm from '@/components/SearchForm.vue';
 import CommonFormDialog from "@/components/CommonFormDialog.vue";
 import AddFormDialog from "@/components/AddFormDialog.vue";
@@ -47,10 +48,12 @@ export default {
   data() {
     return {
       searchFormHeight: 63,
-      SearchFormItems: [...SearchFormItems],
-      columns: [...columns],
-      CommonFormDialogItems: [...CommonFormDialogItems],
-      AddFormDialogItems: [...AddFormDialogItems],
+      CommonFormDialogRules: CommonFormDialogRules,
+      AddFormDialogRules: AddFormDialogRules,
+      SearchFormItems: SearchFormItems,
+      columns: columns,
+      CommonFormDialogItems: CommonFormDialogItems,
+      AddFormDialogItems: AddFormDialogItems,
       CommonFormButtonStatus: '',  //查看一个数据时区分编辑和查看的状态
       dialogVisible: false,
       addDialogVisible: false,
@@ -92,7 +95,7 @@ export default {
           item.props.id = newValue.id;
           item.props.fetchDelete = deleteEmp
         }
-     });
+      });
     }
   },
   methods: {
@@ -149,8 +152,8 @@ export default {
         this.dialogVisible = false;
     },
     // 确认时的操作
-    handleViewConfirm(formData) {
-      console.log("commonFormDialog确认操作触发数据:", JSON.stringify(formData));
+    handleViewConfirm() {
+      console.log("commonFormDialog确认操作触发数据:");
       this.clearOneInfoForm();
       this.resetSearchForm();
     },
@@ -162,7 +165,6 @@ export default {
     },
     // 取消时的操作
     handleAddCancel() {
-      this.resetAddForm();
       this.addDialogVisible = false;
     },
 
@@ -172,18 +174,6 @@ export default {
       this.handleAddCancel();
       this.resetSearchForm();
     },
-
-    resetAddForm() {
-      this.addForm = {
-        name: '',
-        gender: "",
-        job: "",
-        phone: "",
-        birth: "",
-        image: ""
-      }
-    },
-
     ////////////该界面所用api函数 //////////////////////////////////////////////////////////////////////////
     pageQueryEmp,
     insertOneEmp,

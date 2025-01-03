@@ -1,5 +1,6 @@
 <template>
     <div>
+        <PasswordFormDialog :visible.sync="passwordFormDialogVisible" :id = id @close="passwordFormDialogVisible = false"></PasswordFormDialog>
         <el-card>
             <div
                 style="width: 100%; height: 200px; text-align: center; display: flex; flex-direction: column; align-items: center;">
@@ -12,7 +13,7 @@
         <el-card style="margin-top: 20px;">
             <el-descriptions title="个人信息" :column="3" border>
                 <template slot="extra">
-                    <el-button type="primary" size="small">修改账户密码</el-button>
+                    <el-button type="primary" size="small" @click="passwordFormDialogVisible = true">修改账户密码</el-button>
                     <el-button type="primary" size="small">修改个人信息</el-button>
                 </template>
                 <el-descriptions-item v-for="(column, index) in personColumns" :key="index">
@@ -43,17 +44,25 @@
 </template>
 
 <script>
-import { personColumns } from '@/api/person/personData';
+import PasswordFormDialog from '../../../components/PasswordFormDialog.vue';
 import clock from '../../../components/ClockDisplay.vue';
 import store from '@/store';
+import { personColumns } from '@/api/person/personData';
 import { queryOnePerson } from '@/api/person/personApi';
-import { fetchData } from '@/api/common/dataFetcher';
+import { fetchData } from '@/api/common/dataFetcherApi';
 export default {
     components: {
-        clock
+        clock,
+        PasswordFormDialog
     },
     data() {
         return {
+            passwordFormDialogVisible: false,
+            form: {
+                history: '',
+                now: ''
+            },
+            id: '',
             name: '',
             job: '',
             jobMap: [],
@@ -62,10 +71,6 @@ export default {
         };
     },
     methods: {
-        updateTime() {
-            const now = new Date();
-            this.now = now.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }); // 格式化为东八区时间
-        },
         async fetchDataOptions() {
             this.jobMap = await fetchData('empJob');
 
@@ -77,7 +82,7 @@ export default {
         },
         async getYourSelfInfo() {
             try {
-                this.person = (await queryOnePerson(store.getters.getGlobalVar.id)).data;
+                this.person = (await queryOnePerson(this.id)).data;
                 console.log(this.person);
             } catch (error) {
                 console.log(error);
@@ -88,10 +93,12 @@ export default {
 
     },
     created() {
-        this.getYourSelfInfo();
-        this.fetchDataOptions();
+        this.id = store.getters.getGlobalVar.id
         this.name = store.getters.getGlobalVar.name;
         this.job = store.getters.getGlobalVar.job;
+        this.getYourSelfInfo();
+        this.fetchDataOptions();
+ 
     }
 };
 </script>

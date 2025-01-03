@@ -22,7 +22,7 @@
   </template>
   
   <script>
-  import { fetchData } from '@/api/common/dataFetcher';
+  import { fetchData } from '@/api/common/dataFetcherApi';
   import { SearchFormItems, columns, CommonFormDialogItems, AddFormDialogItems } from '@/api/encyclopedia/encyclopediaData';
   import { pageQueryEncyclopedia, queryOneEncyclopedia, insertOneEncyclopedia, updateEncyclopediaStatus, updateEncyclopedia, deleteEncyclopedia } from '@/api/encyclopedia/encyclopediaApi';
   import { Message } from 'element-ui';

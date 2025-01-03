@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Loading, Message } from 'element-ui'; // 使用 Element UI 的消息提示
+import { Loading, Message } from 'element-ui';
 import router from '@/router'; // 导入 Vue Router 实例
 import store from '@/store'; // 假设 store 文件路径为 src/store/index.js
 import { debounce } from 'lodash';

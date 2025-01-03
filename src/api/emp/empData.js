@@ -85,7 +85,7 @@ export const columns = [
     prop: '',
     type: 'button',
     details: [
-      { value: [0,1], name: '编辑', color: 'primary', type: 'update' },
+      { value: [0, 1], name: '编辑', color: 'primary', type: 'update' },
       { value: [0], name: '停职', color: 'warning', type: 1 },
       { value: [1], name: '辞退', color: 'warning', type: 2 },
       { value: [1], name: '恢复', color: 'success', type: 0 },
@@ -98,6 +98,7 @@ export const columns = [
 export const CommonFormDialogItems = [
   { label: "姓名", prop: "name", type: "el-input", props: { autocomplete: "off", disabled: true }, edit: true, isDate: false },
   { label: "电话", prop: "phone", type: "el-input", props: { autocomplete: "off", disabled: true }, edit: true, isDate: false },
+  { label: "账号", prop: "username", type: "el-input", props: { autocomplete: "off", disabled: true }, edit: false, isDate: false },
   {
     label: "性别",
     prop: "gender",
@@ -116,6 +117,7 @@ export const CommonFormDialogItems = [
     edit: true,
     isDate: false
   },
+  { label: "密码", prop: "password", type: "el-input", props: { autocomplete: "off", disabled: true }, edit: false, isDate: false },
   {
     label: "生日",
     prop: "birth",
@@ -124,8 +126,6 @@ export const CommonFormDialogItems = [
     edit: true,
     isDate: true
   },
-  { label: "账号", prop: "username", type: "el-input", props: { autocomplete: "off", disabled: true }, edit: false, isDate: false },
-  { label: "密码", prop: "password", type: "el-input", props: { autocomplete: "off", disabled: true }, edit: false, isDate: false },
   {
     label: "头像",
     prop: "image",
@@ -175,3 +175,58 @@ export const AddFormDialogItems = [
   }
 ];
 
+// 自定义验证函数
+const validateImage = (rule, value, callback) => {
+  console.log("---------->",value);
+  if (!value) {
+    callback(new Error('请上传头像'));
+  } else {
+    callback();
+  }
+};
+
+export const CommonFormDialogRules = {
+  name: [
+    { required: true, message: '请输入姓名', trigger: 'blur' },
+    { max: 50, message: '姓名长度不能超过50个字符', trigger: 'blur' }
+  ],
+  phone: [
+    { required: true, message: '请输入电话', trigger: 'blur' },
+    { pattern: /^1[3-9]\d{9}$/, message: '请输入有效的手机号码', trigger: 'blur' }
+  ],
+  gender: [
+    { required: true, message: '请选择性别', trigger: 'change' }
+  ],
+  job: [
+    { required: true, message: '请选择职位', trigger: 'change' }
+  ],
+  birth: [
+    { required: true, message: '请选择生日', trigger: 'change' }
+  ],
+  image: [
+    { validator: validateImage, required: true, trigger: 'change'}
+  ]
+};
+
+export const AddFormDialogRules = {
+  name: [
+    { required: true, message: '请输入姓名', trigger: 'blur' },
+    { max: 12, message: '姓名长度不能超过12个字符', trigger: 'blur' }
+  ],
+  phone: [
+    { required: true, message: '请输入电话', trigger: 'blur' },
+    { pattern: /^1[3-9]\d{9}$/, message: '请输入有效的手机号码', trigger: 'blur' }
+  ],
+  gender: [
+    { required: true, message: '请选择性别', trigger: 'change' }
+  ],
+  job: [
+    { required: true, message: '请选择职位', trigger: 'change' }
+  ],
+  birth: [
+    { required: true, message: '请选择生日', trigger: 'change' }
+  ],
+  image: [
+    { validator: validateImage, required: true, trigger: 'change'}
+  ]
+};

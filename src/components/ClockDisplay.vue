@@ -30,92 +30,79 @@
       </div>
     </div>
   </el-card>
-
 </template>
 
 <script>
 export default {
   data() {
     return {
-      lineHeight: 64, //跟字体大小和wraper的高度相关！
-      // 秒
+      lineHeight: 64,
       arr1: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-      index1: 0, //就是获取真实时间后的起始数字
+      index1: 0,
       arr2: [0, 1, 2, 3, 4, 5],
       index2: 0,
-      // 分
       arr3: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       index3: 0,
       arr4: [0, 1, 2, 3, 4, 5],
       index4: 0,
-      // 时
       arr5: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       index5: 0,
       arr6: [0, 1, 2],
       index6: 0,
+      lastUpdate: Date.now(),
+      timerId: null,
+      isPageVisible: true
     }
   },
   created() {
-    this.getTime()
+    this.updateTime();
+    this.timerId = setInterval(this.updateTime, 1000);
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
   },
-  watch: {
-    index5(newVal) {
-      // 超过24小时
-      if (this.index6 === 2 && newVal === 4) {
-        console.log('out')
-        for (let i = 1; i < 7; i++) {
-          this[`index${i}`] = 0
-        }
-      }
-    }
+  beforeDestroy() {
+    clearInterval(this.timerId);
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
   },
   methods: {
-    getTime() {
-      const date = new Date()
-      let hour = this.bu0(date.getHours())
-      let minute = this.bu0(date.getMinutes())
-      let second = this.bu0(date.getSeconds())
+    updateTime() {
+      const now = Date.now();
+      this.lastUpdate = now;
+
+      const date = new Date(now);
+      let hour = this.bu0(date.getHours());
+      let minute = this.bu0(date.getMinutes());
+      let second = this.bu0(date.getSeconds());
 
       // 秒
-      this.index1 = +second[1]
-      this.index2 = +second[0]
+      this.index1 = +second[1];
+      this.index2 = +second[0];
       // 分
-      this.index3 = +minute[1]
-      this.index4 = +minute[0]
+      this.index3 = +minute[1];
+      this.index4 = +minute[0];
       // 时
-      this.index5 = +hour[1]
-      this.index6 = +hour[0]
+      this.index5 = +hour[1];
+      this.index6 = +hour[0];
 
-      this.turnSecond(this.arr1.length)
+      // 处理跨天
+      if (this.index6 === 2 && this.index5 === 4) {
+        this.resetTime();
+      }
+    },
+    resetTime() {
+      for (let i = 1; i < 7; i++) {
+        this[`index${i}`] = 0;
+      }
     },
     bu0(num) {
-      let str
-      if (num < 10) str = `0${num}`
-      else str = `${num}`
-      return str.split('')
+      let str = num < 10 ? `0${num}` : `${num}`;
+      return str.split('');
     },
-    turnSecond(length) {
-      setInterval(() => {
-        if (this.index1 === length - 1) {
-          // console.log(1)
-          // 通知前一位移动
-          this.turnOther(2, this.arr2.length)
-          this.index1 = -1
-        }
-        this.index1++
-      }, 1000)
-    },
-    turnOther(type, length) {
-      // type代表第几组数列，例如2，就是从右往左第二列
-      if (this[`index${type}`] === length - 1) {
-        // console.log(type)
-        // 通知前一位移动
-        let next = type + 1
-        this.turnOther(next, this[`arr${next}`].length)
-
-        this[`index${type}`] = -1
+    handleVisibilityChange() {
+      this.isPageVisible = !document.hidden;
+      if (this.isPageVisible) {
+        // 页面重新可见时立即更新时间
+        this.updateTime();
       }
-      this[`index${type}`]++
     }
   }
 }

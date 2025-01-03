@@ -44,7 +44,7 @@
 import { formatDateTime } from '@/utils/commonFunction';
 import { queryAllOrderInfoDetailsCount, queryAllShoppingSale } from '../../../api/sale/saleApi';
 import { shoppingSaleOptions, serviceMostSaleOptions, shoppingMostSaleOptions, serviceSaleOptions } from '../../../api/sale/saleData.js';
-import { fetchData } from '../../../api/common/dataFetcher.js';
+import { fetchData } from '../../../api/common/dataFetcherApi.js';
 import { orderType } from '../../../api/common/CommonData.js';
 import EChart from '../../../components/EChart.vue';
 export default {
