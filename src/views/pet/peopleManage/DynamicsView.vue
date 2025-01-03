@@ -30,7 +30,6 @@ export default {
   computed: {
     tableHight() {
       //60的头部，30的新增按钮，30的分页，20分页的margin，80的el-main的padding=20 *4(上下各一个20)
-      console.log("窗口", window.innerHeight);
       let tableHeight = window.innerHeight - 60 - this.searchFormHeight - 30 - 30 - 20 - 40 - 40;
       console.log(`${tableHeight}px`);
       return `${tableHeight}px`;
@@ -79,7 +78,6 @@ export default {
   },
   methods: {
     getSearchFormHeight(height) {
-      console.log("监控", height)
       this.searchFormHeight = height;
     },
     //////////////表格操作单个数据status/////////////////////////////////////////////////////////////////////////////////////////

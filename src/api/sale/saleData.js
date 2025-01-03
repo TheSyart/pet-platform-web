@@ -112,7 +112,11 @@ export const shoppingMostSaleOptions = {
             return result;
         }
     },
-    legend: {},
+    legend: {
+        orient: 'horizontal',
+        top: '0%',
+        right: '20%'
+    },
     toolbox: {
         feature: {
             saveAsImage: {}
@@ -202,7 +206,11 @@ export const serviceMostSaleOptions = {
             return result;
         }
     },
-    legend: {},
+    legend: {
+        orient: 'horizontal',
+        top: '0%',
+        right: '20%'
+    },
     grid: {
         left: '3%',
         right: '4%',

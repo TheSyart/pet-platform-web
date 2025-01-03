@@ -71,14 +71,7 @@ export default {
   watch: {
     imageUrl(newVal) {
       this.internalImageUrl = newVal;
-    },
-    // disabled(newVal) {
-    //   if (newVal) {
-    //     console.log("禁用状态", newVal);
-    //   } else {
-    //     console.log("启用状态", newVal);
-    //   }
-    // },
+    }
   },
   methods: {
     beforeAvatarUpload(file) {

@@ -5,13 +5,13 @@
             @get-search-form-height="getSearchFormHeight" />
 
         <el-button type="primary" size="small" plain round @click="addDialogVisible = true"
-            style="height:30px;">新增商品</el-button>
+            style="height:30px;">新增服务</el-button>
 
-        <CommonFormDialog title="商品信息" :status="CommonFormButtonStatus" :visible.sync="dialogVisible"
+        <CommonFormDialog title="服务信息" :status="CommonFormButtonStatus" :visible.sync="dialogVisible"
             :formItems="CommonFormDialogItems" :formData="OneObject" formLabelWidth="100px" @close="clearOneInfoForm"
             @confirm="handleViewConfirm" :fetchUpdate="updateService" />
 
-        <AddFormDialog title="新增商品" :addForm="addForm" :visible.sync="addDialogVisible" :formItems="AddFormDialogItems"
+        <AddFormDialog title="新增服务" :addForm="addForm" :visible.sync="addDialogVisible" :formItems="AddFormDialogItems"
             formLabelWidth="100px" :fetchInsert="insertOneService" @close="closeAddForm" @cancel="handleAddCancel"
             @confirm="handleAddConfirm" />
 
@@ -40,7 +40,6 @@ export default {
     computed: {
         tableHight() {
             //60的头部，30的新增按钮，30的分页，20分页的margin，80的el-main的padding=20 *4(上下各一个20)
-            console.log("窗口", window.innerHeight);
             let tableHeight = window.innerHeight - 60 - this.searchFormHeight - 30 - 30 - 20 - 40 - 40;
             console.log(`${tableHeight}px`);
             return `${tableHeight}px`;
@@ -86,7 +85,7 @@ export default {
     },
     watch: {    //监听查询单个的值，返回给CommonFormDialogItems下的一些值
         OneObject(newValue) {
-            console.log("监听查询单个的值，返回给CommonFormDialogItems下的一些值",newValue);
+            console.log("监听查询单个的值，返回给CommonFormDialogItems下的一些值", newValue);
             this.CommonFormDialogItems.forEach(item => {
                 if (item.prop === 'image') {
                     item.props.imageUrl = newValue.image;
@@ -98,7 +97,6 @@ export default {
     },
     methods: {
         getSearchFormHeight(height) {
-            console.log("监控", height)
             this.searchFormHeight = height;
         },
         //////////////表格操作单个数据status/////////////////////////////////////////////////////////////////////////////////////////
@@ -144,9 +142,8 @@ export default {
         },
         // 关闭时和取消时清理表单
         clearOneInfoForm() {
-            this.OneObject = {  // 查询单条数据的载体
-            },
-                this.dialogVisible = false;
+            this.OneObject = {},  // 查询单条数据的载体
+            this.dialogVisible = false;
         },
         // 确认时的操作
         handleViewConfirm(formData) {

@@ -89,6 +89,12 @@ const routes = [
         component: () => import('../views/pet/storeManage/OrderView.vue'),
         meta: { requiresAuth: true, permission: ['orderPage'] }
       },
+      {
+        path: '/person',
+        name: 'person',
+        component: () => import('../views/pet/personManage/PersonView.vue'),
+        meta: { requiresAuth: true, permission: ['personPage'] }
+      },
     ]
   },
   {

@@ -45,8 +45,8 @@
                     </el-date-picker>
 
                     <!-- ImgUploader -->
-                    <ImgUploader v-if="item.type === 'ImgUploader'" @upload-success="handleUploadSuccess"
-                        v-bind="item.props">
+                    <ImgUploader v-if="item.type === 'ImgUploader'" ref="ImgUploader"
+                        @upload-success="handleUploadSuccess" v-bind="item.props">
                     </ImgUploader>
 
                     <!-- el-table -->
@@ -127,8 +127,7 @@ export default {
     },
     data() {
         return {
-            localFormData: { ...this.addForm },
-            imgUploaderRefs: [], // 用于存储每个 ImgUploader 组件的引用
+            localFormData: { ...this.addForm }
         };
     },
     watch: {
@@ -158,12 +157,9 @@ export default {
             this.postAddNewOne();
         },
         handleCancel() {
-            // 遍历所有 ImgUploader 组件并调用 clearImage 方法
-            this.imgUploaderRefs.forEach(ref => {
-                if (ref && typeof ref.clearImage === 'function') {
-                    ref.clearImage(); // 清空图片
-                }
-            });
+            // 调用ImgUploader组件的 clearImage 方法
+            console.log('this.$refs.ImgUploader',this.$refs.ImgUploader);
+            this.$refs.ImgUploader[0].clearImage();
             this.$emit('cancel');
         },
         async postAddNewOne() {

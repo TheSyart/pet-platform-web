@@ -39,7 +39,6 @@ export default {
   computed: {
     tableHeight() {
       //60的头部，302的card，30的分页，20分页的margin，80的el-main的padding=20 *4(上下各一个20)
-      console.log("窗口",window.innerHeight);
       let tableHeight = window.innerHeight - 60 - this.searchFormHeight - 302 - 30 - 20 - 40 -40;
       console.log(`${tableHeight}px`);
       return `${tableHeight}px`;
@@ -77,7 +76,6 @@ export default {
   methods: {
     //////////////动态获取搜索框高度/////////////////////////////////////////////////////////////////////////
     getSearchFormHeight(height){
-      console.log("监控",height)
       this.searchFormHeight = height;
     },
     /////////////分页查询函数///////////////////////////////////////////////////////////////////////////////

@@ -120,7 +120,7 @@ export const CommonFormDialogItems = [
         label: "服务图片",
         prop: "image",
         type: "ImgUploader",
-        props: { type: 'shopping', imageUrl: '', id: '', fetchDelete: '', disabled: true },
+        props: { type: 'service', imageUrl: '', id: '', fetchDelete: '', disabled: true },
         edit: true,
         isDate: false
     }

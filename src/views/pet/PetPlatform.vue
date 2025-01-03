@@ -16,8 +16,8 @@
             </el-dropdown>
         </el-header>
         <el-container style=" height: calc(100vh - 60px);">
-            <el-aside style="height: 100%; width: 200px; background-color: #545c64; "> <!-- 添加边框 -->
-                <el-menu style="height: 100%; width: 200px;" background-color="#545c64" text-color="#fff"
+            <el-aside style="height: 100%; min-width: 200px; width: 10%; background-color: #545c64;">
+                <el-menu style="height: 100%; width: 100%;" background-color="#545c64" text-color="#fff"
                     active-text-color="#ffd04b" :unique-opened="true">
                     <!-- 营销统计管理 -->
                     <el-submenu index="1">
@@ -74,80 +74,92 @@
                             </router-link>
                         </el-menu-item-group>
                     </el-submenu>
-
-                    <!-- 宠物信息管理 -->
+                    <!-- 个人信息管理 -->
                     <el-submenu index="3">
+                        <template slot="title">
+                            <i class="el-icon-s-custom"></i>个人管理
+                        </template>
+                        <el-menu-item-group>
+                            <router-link to="/person" v-slot="{ navigate, href }" custom>
+                                <div style="text-decoration: none;" @click="navigate" :href="href">
+                                    <el-menu-item index="3-1" v-if="hasPermission('personPage')">个人中心</el-menu-item>
+                                </div>
+                            </router-link>
+                        </el-menu-item-group>
+                    </el-submenu>
+                    <!-- 宠物信息管理 -->
+                    <el-submenu index="4">
                         <template slot="title">
                             <i class="el-icon-medal-1"></i>宠物信息管理
                         </template>
                         <el-menu-item-group>
                             <router-link to="/pet" v-slot="{ navigate, href }" custom>
                                 <div style="text-decoration: none;" @click="navigate" :href="href">
-                                    <el-menu-item index="3-1" v-if="hasPermission('petPage')">宠物信息</el-menu-item>
+                                    <el-menu-item index="4-1" v-if="hasPermission('petPage')">宠物信息</el-menu-item>
                                 </div>
                             </router-link>
                             <router-link to="/encyclopedia" v-slot="{ navigate, href }" custom>
                                 <div style="text-decoration: none;" @click="navigate" :href="href">
-                                    <el-menu-item index="3-2"
+                                    <el-menu-item index="4-2"
                                         v-if="hasPermission('encyclopediaPage')">宠物百科</el-menu-item>
                                 </div>
                             </router-link>
                             <router-link to="/feeding" v-slot="{ navigate, href }" custom>
                                 <div style="text-decoration: none;" @click="navigate" :href="href">
-                                    <el-menu-item index="3-3" v-if="hasPermission('feedingPage')">喂养技巧</el-menu-item>
+                                    <el-menu-item index="4-3" v-if="hasPermission('feedingPage')">喂养技巧</el-menu-item>
                                 </div>
                             </router-link>
                         </el-menu-item-group>
                     </el-submenu>
 
                     <!-- 商城服务管理 -->
-                    <el-submenu index="4">
+                    <el-submenu index="5">
                         <template slot="title">
                             <i class="el-icon-goods"></i>商城服务管理
                         </template>
                         <el-menu-item-group>
                             <router-link to="/shopping" v-slot="{ navigate, href }" custom>
                                 <div style="text-decoration: none;" @click="navigate" :href="href">
-                                    <el-menu-item index="4-1" v-if="hasPermission('shoppingPage')">宠物商城</el-menu-item>
+                                    <el-menu-item index="5-1" v-if="hasPermission('shoppingPage')">宠物商城</el-menu-item>
                                 </div>
                             </router-link>
                             <router-link to="/service" v-slot="{ navigate, href }" custom>
                                 <div style="text-decoration: none;" @click="navigate" :href="href">
-                                    <el-menu-item index="4-2" v-if="hasPermission('servicePage')">宠物服务</el-menu-item>
+                                    <el-menu-item index="5-2" v-if="hasPermission('servicePage')">宠物服务</el-menu-item>
                                 </div>
                             </router-link>
                             <router-link to="/order" v-slot="{ navigate, href }" custom>
                                 <div style="text-decoration: none;" @click="navigate" :href="href">
-                                    <el-menu-item index="4-3" v-if="hasPermission('orderPage')">订单管理</el-menu-item>
+                                    <el-menu-item index="5-3" v-if="hasPermission('orderPage')">订单管理</el-menu-item>
                                 </div>
                             </router-link>
                         </el-menu-item-group>
                     </el-submenu>
 
                     <!-- 信息管理 -->
-                    <el-submenu index="5">
+                    <el-submenu index="6">
                         <template slot="title">
                             <i class="el-icon-setting"></i>系统信息管理
                         </template>
                         <el-menu-item-group>
                             <router-link to="/pet" v-slot="{ navigate, href }" custom>
                                 <div style="text-decoration: none;" @click="navigate" :href="href">
-                                    <el-menu-item index="5-1" v-if="hasPermission('petPage')">权限监管</el-menu-item>
+                                    <el-menu-item index="6-1" v-if="hasPermission('petPage')">权限监管</el-menu-item>
                                 </div>
                             </router-link>
                             <router-link to="/emp" v-slot="{ navigate, href }" custom>
                                 <div style="text-decoration: none;" @click="navigate" :href="href">
-                                    <el-menu-item index="5-2" v-if="hasPermission('empPage')">分类信息</el-menu-item>
+                                    <el-menu-item index="6-2" v-if="hasPermission('empPage')">分类信息</el-menu-item>
                                 </div>
                             </router-link>
                             <router-link to="/emp" v-slot="{ navigate, href }" custom>
                                 <div style="text-decoration: none;" @click="navigate" :href="href">
-                                    <el-menu-item index="5-3" v-if="hasPermission('empPage')">用户登录</el-menu-item>
+                                    <el-menu-item index="6-3" v-if="hasPermission('empPage')">用户登录</el-menu-item>
                                 </div>
                             </router-link>
                             <router-link to="/emp" v-slot="{ navigate, href }" custom>
                                 <div style="text-decoration: none;" @click="navigate" :href="href">
-                                    <el-menu-item index="5-4" v-if="hasPermission('empPage')">员工登录</el-menu-item>
+                                    <el-menu-item index="6-4" v-if="hasPermission('empPage')">员工登录</el-menu-item>
                                 </div>
                             </router-link>
                         </el-menu-item-group>

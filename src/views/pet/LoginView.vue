@@ -59,6 +59,7 @@ export default {
           jwt: response.data.jwt,
           id: response.data.id,
           name: response.data.name,
+          job: response.data.job,
           permission: response.data.permission
         });
         Message.success('登陆成功！');   //提示成功

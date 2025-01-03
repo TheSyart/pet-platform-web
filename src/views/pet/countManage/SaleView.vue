@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import { formatDateTime } from '@/utils/commonFunction';
 import { queryAllOrderInfoDetailsCount, queryAllShoppingSale } from '../../../api/sale/saleApi';
 import { shoppingSaleOptions, serviceMostSaleOptions, shoppingMostSaleOptions, serviceSaleOptions } from '../../../api/sale/saleData.js';
 import { fetchData } from '../../../api/common/dataFetcher.js';
@@ -202,8 +203,8 @@ export default {
     },
 
     async getInformation() {
-      const start = this.$formatDateTime(this.start);
-      const end = this.$formatDateTime(this.end)
+      const start = formatDateTime(this.start);
+      const end = formatDateTime(this.end)
       const params = { start: start, end: end };
 
       try {

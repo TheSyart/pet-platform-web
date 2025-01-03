@@ -18,6 +18,120 @@
           <el-button @click="updateTime('null', null)">全部</el-button>
         </el-tooltip>
       </div>
+
+      <div style="display: flex; flex: 1;">
+
+        <el-card class="box-card">
+          <div style="display: flex; justify-content: space-between; text-align: center;">
+
+            <div style="flex: 1;">
+              <el-statistic title="总访问量">
+                <template slot="formatter">
+                  <span style="font-size: 18px; font-weight: bold;">
+                    {{ loginData[0]?.total + loginData[1]?.total || 0 }}次
+                  </span>
+                </template>
+              </el-statistic>
+            </div>
+
+            <div style="flex: 1;">
+              <el-statistic title="客户访问量">
+                <template slot="formatter">
+                  <span style="font-size: 18px; font-weight: bold;">
+                     {{ loginData[0]?.total || 0 }}次
+                  </span>
+                </template>
+              </el-statistic>
+            </div>
+
+            <div style="flex: 1;">
+              <el-statistic title="员工访问量">
+                <template slot="formatter">
+                  <span style="font-size: 18px; font-weight: bold;">
+                     {{ loginData[1]?.total || 0 }}次
+                  </span>
+                </template>
+              </el-statistic>
+            </div>
+          </div>
+        </el-card>
+
+        <el-card class="box-card">
+          <div style="display: flex; justify-content: space-between; text-align: center;">
+            <div style="flex: 1;">
+              <el-statistic title="完成订单">
+                <template slot="formatter">
+                  <span style="font-size: 18px; font-weight: bold;">
+                    {{ orderData[0]?.finish + orderData[1]?.finish || 0 }}单
+                  </span>
+                </template>
+              </el-statistic>
+            </div>
+            <div style="flex: 1;">
+              <el-statistic title="待完成订单">
+                <template slot="formatter">
+                  <span style="font-size: 18px; font-weight: bold;">
+                    {{ orderData[0]?.finishing + orderData[0]?.timeout + orderData[1]?.finishing + orderData[1]?.timeout
+                    || 0 }}单
+                  </span>
+                </template>
+              </el-statistic>
+            </div>
+            <div style="flex: 1;">
+              <el-statistic title="取消订单">
+                <template slot="formatter">
+                  <span style="font-size: 18px; font-weight: bold;">
+                    {{ orderData[0]?.remove + orderData[1]?.remove || 0 }}单
+                  </span>
+                </template>
+              </el-statistic>
+            </div>
+            <div style="flex: 1;">
+              <el-statistic title="待取消订单">
+                <template slot="formatter">
+                  <span style="font-size: 18px; font-weight: bold;">
+                    {{ orderData[0]?.removing + orderData[1]?.removing || 0 }}单
+                  </span>
+                </template>
+              </el-statistic>
+            </div>
+          </div>
+        </el-card>
+
+        <el-card class="box-card">
+          <div style="display: flex; justify-content: space-between; text-align: center;">
+            <div style="flex: 1;">
+              <el-statistic title="总营业额">
+                <template slot="formatter">
+                  <span style="font-size: 18px; font-weight: bold;">
+                    {{ (orderData[0]?.totalPrice + orderData[1]?.totalPrice || 0).toFixed(2) }}元
+                  </span>
+                </template>
+              </el-statistic>
+            </div>
+            <div style="flex: 1;">
+              <el-statistic title="宠物商城">
+                <template slot="formatter">
+                  <span style="font-size: 18px; font-weight: bold;">
+                    {{ (orderData[0]?.totalPrice || 0).toFixed(2) }}元
+                  </span>
+                </template>
+              </el-statistic>
+            </div>
+            <div style="flex: 1;">
+              <el-statistic title="宠物服务">
+                <template slot="formatter">
+                  <span style="font-size: 18px; font-weight: bold;">
+                    {{ (orderData[1]?.totalPrice || 0).toFixed(2) }}元
+                  </span>
+                </template>
+              </el-statistic>
+            </div>
+          </div>
+        </el-card>
+
+      </div>
+
       <!-- 图表 -->
       <div style="display: flex; flex: 1;">
         <!-- 统计登录 -->
@@ -25,81 +139,20 @@
           <EChart :options="loginOptions" :width="'100%'" :height="'300px'" />
         </el-card>
 
-        <el-card class="box-card">
+        <el-card style="flex: 2; margin: 5px; width: 33%;">
           <EChart :options="orderOptions" :width="'100%'" :height="'300px'" />
         </el-card>
-
-        <el-card class="box-card">
-          <el-collapse v-model="activeName" accordion>
-            <!-- 登录数据 -->
-            <el-collapse-item name="login" v-if="loginData.length > 0">
-              <template slot="title">
-                <span style="color: #67C23A; font-size: 18px">
-                  总访问量: {{ loginData[0]?.total + loginData[1]?.total || 0 }}次
-                  <i class="header-icon el-icon-view"></i>
-                </span>
-              </template>
-              <div><el-tag type="success">客户访问量: {{ loginData[0]?.total || 0 }}次</el-tag> </div>
-              <div><el-tag type="warning">员工访问量: {{ loginData[1]?.total || 0 }}次</el-tag></div>
-            </el-collapse-item>
-
-            <!-- 营业额数据 -->
-            <el-collapse-item name="money" v-if="orderData.length > 0">
-              <template slot="title">
-                <span style="color: #F56C6C; font-size: 18px">
-                  总营业额: {{ (orderData[0]?.totalPrice + orderData[1]?.totalPrice || 0).toFixed(2) }}元
-                  <i class="header-icon el-icon-money"></i>
-                </span>
-              </template>
-              <div>
-                <el-tag>宠物商城: {{ orderData[0]?.totalPrice || 0 }}元</el-tag>
-                <el-tag type="success">完成{{ orderData[0]?.finish || 0 }}单</el-tag>
-                <el-tag type="danger">取消{{ orderData[0]?.remove || 0 }}单</el-tag>
-              </div>
-              <div>
-                <el-tag>宠物服务: {{ orderData[1]?.totalPrice || 0 }}元</el-tag>
-                <el-tag type="success">完成{{ orderData[1]?.finish || 0 }}单</el-tag>
-                <el-tag type="danger">取消{{ orderData[1]?.remove || 0 }}单</el-tag>
-              </div>
-            </el-collapse-item>
-
-            <!-- 订单数据 -->
-            <el-collapse-item name="order" v-if="orderData.length > 0">
-              <template slot="title">
-                <span style="color: #E6A23C; font-size: 18px">
-                  待完成订单数: {{ orderData[0]?.ing + orderData[0]?.timeout + orderData[1]?.ing + orderData[1]?.timeout || 0
-                  }}单
-                  <i class="header-icon el-icon-s-order"></i>
-                </span>
-              </template>
-              <div><el-tag type="success">宠物商城: {{ orderData[0]?.ing + orderData[0]?.timeout || 0 }}单</el-tag> </div>
-              <div><el-tag type="warning">宠物服务: {{ orderData[1]?.ing + orderData[1]?.timeout || 0 }}单</el-tag></div>
-            </el-collapse-item>
-          </el-collapse>
-        </el-card>
-      </div>
-      <div style="display: flex; flex: 1;">
-        <el-card class="box-card">
-        </el-card>
-
-        <el-card class="box-card">
-          <!-- <EChart :options="empOptions" :width="'100%'" :height="'300px'" /> -->
-        </el-card>
-
-        <el-card class="box-card">
-          <!-- <EChart :options="totalOptions" :width="'100%'" :height="'300px'" /> -->
-        </el-card>
-
       </div>
     </el-main>
   </div>
 </template>
 
 <script>
-import { loginCount, orderCount } from '@/api/home/homeApi.js';
+import { formatDateTime } from '@/utils/commonFunction';
+import { loginCount, orderCount } from '@/api/home/homeApi';
 import { loginType, result, accountType } from '@/api/common/CommonData';
 import EChart from '../../../components/EChart.vue';
-import { loginOptions, orderOptions } from '@/api/home/homeData.js';
+import { loginOptions, orderOptions } from '@/api/home/homeData';
 export default {
   components: {
     EChart
@@ -187,8 +240,8 @@ export default {
       });
     },
     async getInformation() {
-      const start = this.formatDateTime(this.start);
-      const end = this.formatDateTime(this.end)
+      const start = formatDateTime(this.start);
+      const end = formatDateTime(this.end)
       const params = { start: start, end: end };
 
       try {
@@ -216,20 +269,7 @@ export default {
       } catch (error) {
         console.error('错误:', error);
       }
-    },
-    formatDateTime(date) {
-      return date
-        ? new Intl.DateTimeFormat('zh-CN', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          timeZone: 'Asia/Shanghai', // 明确指定时区
-        }).format(new Date(date)).replace(/\//g, '-')
-        : '';
-    },
+    }
   },
   mounted() {
     this.updateTime('day', 1);

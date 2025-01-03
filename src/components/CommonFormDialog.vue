@@ -11,7 +11,8 @@
                     </el-input>
 
                     <!-- el-input-number -->
-                    <el-input-number v-if="item.type === 'el-input-number'" v-model="localFormData[item.prop]" v-bind="item.props">
+                    <el-input-number v-if="item.type === 'el-input-number'" v-model="localFormData[item.prop]"
+                        v-bind="item.props">
                     </el-input-number>
 
                     <!-- el-select -->
@@ -43,8 +44,8 @@
                     </el-date-picker>
 
                     <!-- ImgUploader -->
-                    <ImgUploader v-if="item.type === 'ImgUploader'" @upload-success="handleUploadSuccess"
-                        v-bind="item.props">
+                    <ImgUploader v-if="item.type === 'ImgUploader'" ref="ImgUploader"
+                        @upload-success="handleUploadSuccess" v-bind="item.props">
                     </ImgUploader>
 
                     <!-- el-table -->
@@ -118,6 +119,7 @@
 </template>
 
 <script>
+import { formatDateTime } from '@/utils/commonFunction';
 import { Message } from 'element-ui';
 import ImgUploader from './ImgUploader.vue';
 import CommonTable from './CommonTable.vue'; // 导入 CommonTable 组件
@@ -160,7 +162,7 @@ export default {
             centerPoint: [117.24619443753649, 31.815551443626454], // 示例起点坐标
             localFormData: { ...this.formData },
             submitDisabled: true,
-            initialImageData: this.formData.image, // 新增属性，用于存储初始图片路径
+            initialImageData: this.formData.image, // 用于存储初始图片路径
             dialogVisible: false,
             currentDialogConfig: {
             }
@@ -221,6 +223,12 @@ export default {
             console.log("开始编辑", JSON.stringify(this.formData));
         },
         handleClose() {
+          // 上传照片后，并没有保存，在关闭时，自动删除文件中上传照片
+          console.log("uploadBackPath",this.$refs.ImgUploader[0].uploadBackPath);
+            if (this.$refs.ImgUploader[0].uploadBackPath) {
+                this.$refs.ImgUploader[0].deleteImage();
+            }
+
             this.formItems.forEach((item) => {
                 // 如果存在 item.disabledStatus，不重置 disabled 状态
                 if (!item.disabledStatus) {
@@ -235,7 +243,7 @@ export default {
             this.formItems.forEach((item) => {
                 Object.keys(data).forEach(key => {
                     if (item.prop === key && item.isDate) {
-                        data[key] = this.$formatDateTime(data[key]);
+                        data[key] = formatDateTime(data[key]);
                     }
                 });
             });
@@ -246,9 +254,10 @@ export default {
             }
             this.updateOneInfo(data);
         },
-        handleUploadSuccess(responseData) {     //上传照片成功返回照片回传地址
-            console.log('照片回传地址:', responseData);
-            this.localFormData.image = responseData; // 将响应数据保存到本地表单数据
+        handleUploadSuccess(image) {     //上传照片成功返回照片回传地址
+            console.log('照片回传地址:', image);
+            this.localFormData.image = image; // 将响应数据保存到本地表单数据
+            this.$refs.ImgUploader[0].uploadBackPath = '';  //照片商城上传完成成功后，清空照片回传地址
         },
         async updateOneInfo(date) {
             console.log("updateOneInfo", JSON.stringify(date));
@@ -260,9 +269,6 @@ export default {
                 Message.error(error.response?.data?.message || '更新失败!');
             }
         },
-    },
-    created() {
-        console.log("CommonFormDialog created", this.formItems);
     }
 };
 </script>
