@@ -38,8 +38,9 @@ class WebSocketService {
     // 发送消息
     sendMessage(message,receiver) {
         if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-            const sendMessage = `${receiver}:${message}`;
-            this.socket.send(sendMessage);
+            const sendMessage = {receiver: receiver, message: message};
+            const jsonMessage = JSON.stringify(sendMessage);
+            this.socket.send(jsonMessage);
         } else {
             console.error("WebSocket 未连接");
         }
@@ -53,7 +54,7 @@ class WebSocketService {
     // 通知所有监听器
     _notifyListeners(message) {
         this.listeners.forEach((callback) => {
-            callback(message);
+            callback(JSON.parse(message));
         });
     }
 

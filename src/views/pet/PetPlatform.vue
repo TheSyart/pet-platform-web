@@ -206,7 +206,7 @@ export default {
         this.EmpPermission = globalVar.permission || []; // 获取用户权限数组 
 
         // 组件加载时连接 WebSocket
-        WebSocketService.connect('alice');
+        WebSocketService.connect(this.username = store.getters.getGlobalVar.username);
     }
 };
 </script>

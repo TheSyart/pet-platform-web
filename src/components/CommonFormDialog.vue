@@ -78,6 +78,9 @@
                 <el-button type="primary" v-if="status === 'update'" @click="startUpdate">编辑</el-button>
                 <el-button type="primary" v-if="status === 'update'" :disabled="submitDisabled"
                     @click="handleConfirm">确定</el-button>
+
+                    <!-- 个人中心修改按钮 -->
+                <el-button type="primary" v-if="status === 'person'" @click="handleConfirm">修改</el-button>
             </div>
         </template>
 
@@ -141,7 +144,7 @@ export default {
         },
         status: {
             type: String,
-            required: true,
+            required: false,
         },
         visible: {
             type: Boolean,
@@ -227,7 +230,6 @@ export default {
             console.log("开始编辑", JSON.stringify(this.formData));
         },
         handleClose() {
-            console.log("cccccccccccc",this.imagePassed);
             // 上传照片后，并没有保存，在关闭时，自动删除文件中上传照片
             if (!this.imagePassed && this.$refs.ImgUploader[0].uploadBackPath) {
                 this.$refs.ImgUploader[0].deleteImage();

@@ -59,6 +59,7 @@ export default {
           jwt: response.data.jwt,
           id: response.data.id,
           name: response.data.name,
+          username: response.data.username,
           job: response.data.job,
           permission: response.data.permission
         });
