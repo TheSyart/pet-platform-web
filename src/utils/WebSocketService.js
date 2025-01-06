@@ -8,15 +8,18 @@ class WebSocketService {
     }
 
     // 初始化 WebSocket 连接
-    connect(username) {
+    connect() {
         if (this.socket) {
             console.log("WebSocket 已连接");
             return;
         }
+        const host = window.location.host;
+        if (host.includes('localhost')) {
+            this.socket = new WebSocket(`ws://localhost:8080/ws?token=${store.getters.getGlobalVar.jwt}`);
+        } else {
+            this.socket = new WebSocket(`ws://118.178.254.196:8080/ws?token=${store.getters.getGlobalVar.jwt}`);
+        }
 
-        this.username = username;
-        this.socket = new WebSocket(`ws://localhost:8080/ws?username=${username}`);
-        console.log(store.getters.getGlobalVar.jwt);
 
         this.socket.onopen = () => {
             console.log("WebSocket 连接成功！");
@@ -36,10 +39,9 @@ class WebSocketService {
     }
 
     // 发送消息
-    sendMessage(message,receiver) {
+    sendMessage(msg) {
         if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-            const sendMessage = {receiver: receiver, message: message};
-            const jsonMessage = JSON.stringify(sendMessage);
+            const jsonMessage = JSON.stringify(msg);
             this.socket.send(jsonMessage);
         } else {
             console.error("WebSocket 未连接");

@@ -1,34 +1,59 @@
 <template>
   <div class="chat-container">
-    <div class="left-side">
 
+    <div class="left-side">
       <div class="search-wrapper">
         <el-input v-model="searchUserName" placeholder="回车搜索用户" class="search-input"
-          @keydown.enter.native="searchUserForForm"></el-input>
+          @keydown.enter.native="searchUserList(activeName)"></el-input>
       </div>
+      <el-tabs class="user-list" v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="客户会话" name=0>
+          <el-scrollbar>
+            <el-row>
+              <el-col :span="24" v-for="form in messageForm" :key="form.id" @click.native="chooseUser(form)">
+                <div class="user-item">
+                  <div class="user-avatar-wrapper">
+                    <div :class="{ 'online-dot': form.online }"></div>
 
-      <el-scrollbar class="user-list-scroll">
-        <el-row>
-          <el-col :span="24" v-for="form in messageForm" :key="form.id" @click.native="chooseUser(form)">
-            <div class="user-item">
-              <div class="user-avatar-wrapper">
-                <div :class="{ 'online-dot': form.online }"></div>
+                    <el-badge :value="form.isRead" class="message-badge" v-if="form.isRead > 0">
+                      <img :src="form.image" class="user-avatar">
+                    </el-badge>
+                    <img :src="form.image" class="user-avatar" v-else>
+                  </div>
+                  <div class="user-details">
+                    <div class="user-name">{{ form.name }}</div>
+                    <div class="user-last-message">{{ form.username }}&nbsp;</div>
+                  </div>
+                </div>
+              </el-col>
+            </el-row>
+          </el-scrollbar>
+        </el-tab-pane>
+        <el-tab-pane label="员工会话" name=1>
+          <el-scrollbar>
+            <el-row>
+              <el-col :span="24" v-for="form in messageForm" :key="form.id" @click.native="chooseUser(form)">
+                <div class="user-item">
+                  <div class="user-avatar-wrapper">
+                    <div :class="{ 'online-dot': form.online }"></div>
 
-                <el-badge :value="2" class="message-badge" v-if="form.online">
-                  <img :src="form.image" class="user-avatar">
-                </el-badge>
-                <img :src="form.image" class="user-avatar" v-else>
-              </div>
-              <div class="user-details">
-                <div class="user-name">{{ form.name }}</div>
-                <div class="user-last-message">{{ form.username }}&nbsp;</div>
-              </div>
-            </div>
-          </el-col>
-        </el-row>
-      </el-scrollbar>
+                    <el-badge :value="form.isRead" class="message-badge" v-if="form.isRead > 0">
+                      <img :src="form.image" class="user-avatar">
+                    </el-badge>
+                    <img :src="form.image" class="user-avatar" v-else>
+                  </div>
+                  <div class="user-details">
+                    <div class="user-name">{{ form.name }}</div>
+                    <div class="user-last-message">{{ form.username }}&nbsp;</div>
+                  </div>
+                </div>
+              </el-col>
+            </el-row>
+          </el-scrollbar>
+        </el-tab-pane>
+
+      </el-tabs>
     </div>
-
 
     <el-empty class="right-side" v-if="!currentUser.name" :image-size="200" description="暂无会话"></el-empty>
     <div class="right-side" v-if="currentUser.name">
@@ -40,15 +65,15 @@
 
 
       <el-scrollbar class="chat-messages" ref="messageContainer">
-        <div class="messageBox" v-for="(message, index) in middleMessages" :key="index"
+        <div class="messageBox" v-for="(message, index) in messages" :key="index"
           :class="{ ownMessage: message.sender === username, otherMessage: message.receiver === username }">
-          <div> <el-avatar>{{ message.sender === username ? username : currentUser.name }}</el-avatar></div>
+          <div> <el-avatar>{{ message.sender === username ? name : currentUser.name }}</el-avatar></div>
           <div class="messageContent">{{ message.message }}</div>
           <!-- <div class="messageTime">{{ message.createTime.replace('T', ' ') }}</div> -->
         </div>
       </el-scrollbar>
       <div class="chat-input">
-        <el-input v-model="message" @keydown.enter="sendMessage" placeholder="输入消息" autosize
+        <el-input v-model="message" @keydown.enter.native="sendMessage" placeholder="输入消息" autosize
           class="message-input"></el-input>
         <el-button type="primary" @click="sendMessage" class="send-button">发送</el-button>
       </div>
@@ -64,17 +89,18 @@
 
 <script>
 import store from '@/store';
-import { queryConverseList } from '@/api/converse/converseApi';
+import { queryConverseList, queryOnePersonMessageList } from '@/api/converse/converseApi';
 import WebSocketService from '@/utils/WebSocketService'; // 引入 WebSocket 服务
 
 export default {
   data() {
     return {
-      username: "",       //当前用户
+      activeName: 0,
+      username: "",       //员工用户名
+      name: "",           //员工姓名
       receiver: "",       //接收者
       message: "",        //输入框的消息
-      messages: [],       //全部消息列表
-      middleMessages: [],   //一个用户消息列表容器
+      messages: [],       //一个用户消息列表容器
       onlineCount: 0,     //在线人数
       messageForm: [],    //用户列表
       searchUserName: "", //搜索用户
@@ -82,26 +108,24 @@ export default {
     };
   },
   methods: {
+    handleClick(tab, event) {
+      console.log(tab, event);
+      this.searchUserList()
+    },
     chooseUser(form) {
-      this.middleMessages = []; //清空容器消息列表
+      this.messages = [];
       this.receiver = form.username;
       this.currentUser = form;
-      this.messages.forEach(item => {
-        if (item.sender === form.username || item.receiver === form.username) {
-          this.middleMessages.push(item);
-        }
-      });
+
+      this.getOnePersonMessageList();
     },
     sendMessage() {
       if (this.message.trim() !== "") {
+        //sendType 0 员工发送; receiverType: 1 客户接受; messageType 0 文本消息;
+        const msg = { sender: this.username, receiver: this.currentUser.username, sendType: 0, receiverType: 1, message: this.message, messageType: 0 };
 
-        WebSocketService.sendMessage(this.message, this.receiver); // 发送消息
-
-        const msg = { sender: this.username, message: this.message, receiver: this.currentUser.username };
-
+        WebSocketService.sendMessage(msg); // 发送消息
         this.messages.push(msg);
-
-        this.middleMessages.push(msg);
         this.message = ""; // 清空输入框
 
 
@@ -115,17 +139,26 @@ export default {
         }
       } else {    // 普通消息
         this.messages.push(message);
-        this.middleMessages.push(message);
       }
     },
-    async searchUserForForm() {
-      const res = await queryConverseList(0);
+    async searchUserList() {
+      this.messageForm = [];
+      const data = { type: this.activeName, searchName: this.searchUserName, username: this.username };
+      const res = await queryConverseList(data);
       this.messageForm = res.data;
+    },
+    async getOnePersonMessageList() {
+      const data = { sender: this.username, receiver: this.currentUser.username };
+      const res = await queryOnePersonMessageList(data);
+      console.log("......", JSON.stringify(res.data));
+      this.messages = res.data;
+
     },
   },
   created() {
     this.username = store.getters.getGlobalVar.username;
-    this.searchUserForForm();
+    this.name = store.getters.getGlobalVar.name;
+    this.searchUserList(0);
   },
   mounted() {
     // 监听接收到的消息
@@ -155,6 +188,7 @@ export default {
   border-right: 1px solid #eaeaea;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
 }
 
 .search-input {
@@ -165,10 +199,11 @@ export default {
   max-width: 300px;
 }
 
-.user-list-scroll {
-  top: 40px;
+.user-list {
+  align-items: center;
+  margin-top: 40px;
   height: calc(100% - 40px);
-  overflow-y: auto;
+  width: calc(100% - 40px);
 }
 
 .user-avatar-wrapper {
@@ -209,7 +244,7 @@ export default {
 }
 
 .right-side {
-  flex: 3;
+  flex: 5;
   display: flex;
   flex-direction: column;
   border-right: 1px solid #eaeaea;
@@ -222,7 +257,7 @@ export default {
   right: 0;
   cursor: pointer;
   margin-right: 30px;
-  
+
 }
 
 .chat-header {
