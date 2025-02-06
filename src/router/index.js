@@ -95,6 +95,12 @@ const routes = [
         component: () => import('../views/pet/personManage/PersonView.vue'),
         meta: { requiresAuth: true, permission: ['personPage'] }
       },
+      {
+        path: '/test',
+        name: 'test',
+        component: () => import('../views/pet/systemManage/TestView.vue'),
+        meta: { requiresAuth: true, permission: ['testPage'] }
+      },
     ]
   },
   {

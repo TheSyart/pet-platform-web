@@ -152,9 +152,9 @@
                                     <el-menu-item index="6-2" v-if="hasPermission('empPage')">分类信息</el-menu-item>
                                 </div>
                             </router-link>
-                            <router-link to="/emp" v-slot="{ navigate, href }" custom>
+                            <router-link to="/test" v-slot="{ navigate, href }" custom>
                                 <div style="text-decoration: none;" @click="navigate" :href="href">
-                                    <el-menu-item index="6-3" v-if="hasPermission('empPage')">用户登录</el-menu-item>
+                                    <el-menu-item index="6-3" v-if="hasPermission('testPage')">测试</el-menu-item>
                                 </div>
                             </router-link>
                             <router-link to="/emp" v-slot="{ navigate, href }" custom>

@@ -56,7 +56,12 @@ export const SearchFormItems = [
 
 export const columns = [
   { label: '姓名', prop: 'name' },
-  { label: '手机号', prop: 'phone' },
+  {
+    label: '手机号',
+    prop: 'phone',
+    type: 'null',
+    details: [{ name: "未绑定手机" }]
+  },
   {
     label: '性别',
     prop: 'gender',
@@ -177,7 +182,7 @@ export const AddFormDialogItems = [
 
 // 自定义验证函数
 const validateImage = (rule, value, callback) => {
-  console.log("---------->",value);
+  console.log("---------->", value);
   if (!value) {
     callback(new Error('请上传头像'));
   } else {
@@ -204,7 +209,7 @@ export const CommonFormDialogRules = {
     { required: true, message: '请选择生日', trigger: 'change' }
   ],
   image: [
-    { validator: validateImage, required: true, trigger: 'change'}
+    { validator: validateImage, required: true, trigger: 'change' }
   ]
 };
 
@@ -227,6 +232,6 @@ export const AddFormDialogRules = {
     { required: true, message: '请选择生日', trigger: 'change' }
   ],
   image: [
-    { validator: validateImage, required: true, trigger: 'change'}
+    { validator: validateImage, required: true, trigger: 'change' }
   ]
 };

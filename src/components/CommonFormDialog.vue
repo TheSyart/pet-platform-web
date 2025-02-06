@@ -140,7 +140,7 @@ export default {
         },
         rule: {
             type: Object,
-            required: true
+            required: false
         },
         status: {
             type: String,

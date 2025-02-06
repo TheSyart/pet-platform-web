@@ -12,7 +12,7 @@ export function deleteFile(data) {
 //上传照片
 export function uploadPic(formData) {
   return request({
-    url: `/handlePic/webUpload`,
+    url: `/handlePic/uploadPic`,
     method: 'post',
     headers: {
       "Content-Type": "multipart/form-data"

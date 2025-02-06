@@ -45,7 +45,12 @@ export const SearchFormItems = [
 
 export const columns = [
   { label: '姓名', prop: 'name' },
-  { label: '手机号', prop: 'phone' },
+  {
+    label: '手机号',
+    prop: 'phone',
+    type: 'null',
+    details: [{name:"未绑定手机"}]
+  },
   {
     label: '性别',
     prop: 'gender',

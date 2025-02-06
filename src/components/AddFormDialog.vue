@@ -102,7 +102,7 @@ export default {
         },
         rule: {
             type: Object,
-            required: true
+            required: false
         },
         visible: {
             type: Boolean,

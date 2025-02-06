@@ -12,6 +12,11 @@ module.exports = defineConfig({
           '^/api': '',  // 将请求路径中的 /api 去掉
         },
       },
+      '/server-resource': { //http://192.168.31.140/
+        target: 'http://localhost:8080',
+        changeOrigin: true, 
+      },
+    }
       // '/ws': {  // 当请求路径以 /ws 开头时，进行代理
       //   target: `ws://localhost:8080/ws`,
       //   changeOrigin: true,  // 改变请求的源（否则后端可能无法识别）
@@ -20,6 +25,7 @@ module.exports = defineConfig({
       //     '^/ws': '',  // 将请求路径中的 /ws 去掉
       //   },
       // },
-    },
   },
 });
+
+
