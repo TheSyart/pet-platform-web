@@ -19,6 +19,7 @@
 <script>
 import AMapLoader from "@amap/amap-jsapi-loader";
 import { Message } from "element-ui";
+import { GD_SecurityJsCode, GD_key } from "@/views/resource/private/key";
 
 export default {
   name: "map-view",
@@ -49,10 +50,10 @@ export default {
   methods: {
     initAMap() {
       window._AMapSecurityConfig = {
-        securityJsCode: "f0b1d87cbd9684f7d8e60fcd862baf72",
+        securityJsCode: GD_SecurityJsCode,
       };
       AMapLoader.load({
-        key: "509775489ebb4ee75113db3c865ccbcd",
+        key: GD_key,
         version: "2.0",
         plugins: ["AMap.Scale", "PlaceSearch", "ToolBar", "AMap.Driving", "AMap.Walking", "AMap.Riding"],
       })

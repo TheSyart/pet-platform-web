@@ -2,6 +2,8 @@
 node_modules
 /dist
 
+#秘钥
+key.js
 
 # local env files
 .env.local
