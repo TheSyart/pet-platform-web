@@ -16,11 +16,10 @@ Web网页端为店家提供全方面的管理服务，主要以为用户配送�
 <img src="https://github.com/user-attachments/assets/a5060bbb-05e4-4929-a736-46fee70a4bec" width="500px">
 <img src="https://github.com/user-attachments/assets/a5210cea-a165-457a-a89a-7d6b4b31f0ba" width="500px">
 
-### 订单管理页面  ![screenshot-1738908818200](https://github.com/user-attachments/assets/f67cb34e-2d66-4530-b312-d6f270068a38)
-
+### 订单管理页面  
 <img src="https://github.com/user-attachments/assets/91fdb874-17fc-4b64-8118-394e7b326e7c" width="500px">
 <img src="https://github.com/user-attachments/assets/76bbcfa6-8e1f-4365-a0c4-22b461d0d7bd" width="500px">
-<img src="https://github.com/user-attachments/assets/51a844e6-f4e8-4106-97c9-9de544f5031d" width="500px">
+<img src="https://github.com/user-attachments/assets/f67cb34e-2d66-4530-b312-d6f270068a38" width="500px">
 
 ### 常规信息界面  
 <img src="https://github.com/user-attachments/assets/6232757e-f8ee-47d4-8ec3-e0c6929553ec" width="500px">
