@@ -31,7 +31,8 @@ Web网页端为店家提供全方面的管理服务，主要以为用户配送�
 <img src="https://github.com/user-attachments/assets/fff59fa9-c727-4566-899f-ee8b60f503ab" width="500px">
 
 ## 4.工程的配置文件  
-在src\views\resource\private\key.js下新建配置文件即可
+在src\views\resource\private\key.js下新建配置文件即可  
+填上你的高德秘钥
 
 <img src="https://github.com/user-attachments/assets/d8f1d596-052d-4e6d-a770-bef9d2054cc4" width="210px" alt="高德地图秘钥">  
 
