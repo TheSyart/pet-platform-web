@@ -9,26 +9,26 @@ Web网页端为店家提供全方面的管理服务，主要以为用户配送�
 ## 3.照片展示
 
 ### 登录  
-<img src="https://github.com/user-attachments/assets/6484005e-6230-4414-a4fc-bae8adcf6d8b" width="400px">
+<img src="https://github.com/user-attachments/assets/6484005e-6230-4414-a4fc-bae8adcf6d8b" width="500px">
 
 ### 统计类页面  
-<img src="https://github.com/user-attachments/assets/3b11ccff-237e-485a-8501-2f8b9a449d78" width="400px">
-<img src="https://github.com/user-attachments/assets/a5060bbb-05e4-4929-a736-46fee70a4bec" width="400px">
-<img src="https://github.com/user-attachments/assets/a5210cea-a165-457a-a89a-7d6b4b31f0ba" width="400px">
+<img src="https://github.com/user-attachments/assets/3b11ccff-237e-485a-8501-2f8b9a449d78" width="500px">
+<img src="https://github.com/user-attachments/assets/a5060bbb-05e4-4929-a736-46fee70a4bec" width="500px">
+<img src="https://github.com/user-attachments/assets/a5210cea-a165-457a-a89a-7d6b4b31f0ba" width="500px">
 
 ### 订单管理页面  
-<img src="https://github.com/user-attachments/assets/91fdb874-17fc-4b64-8118-394e7b326e7c" width="400px">
-<img src="https://github.com/user-attachments/assets/76bbcfa6-8e1f-4365-a0c4-22b461d0d7bd" width="400px">
-<img src="https://github.com/user-attachments/assets/51a844e6-f4e8-4106-97c9-9de544f5031d" width="400px">
+<img src="https://github.com/user-attachments/assets/91fdb874-17fc-4b64-8118-394e7b326e7c" width="500px">
+<img src="https://github.com/user-attachments/assets/76bbcfa6-8e1f-4365-a0c4-22b461d0d7bd" width="500px">
+<img src="https://github.com/user-attachments/assets/51a844e6-f4e8-4106-97c9-9de544f5031d" width="500px">
 
 ### 常规信息界面  
-<img src="https://github.com/user-attachments/assets/6232757e-f8ee-47d4-8ec3-e0c6929553ec" width="400px">
+<img src="https://github.com/user-attachments/assets/6232757e-f8ee-47d4-8ec3-e0c6929553ec" width="500px">
 
 ### 会话界面  
-<img src="https://github.com/user-attachments/assets/651979b8-662d-4414-a8da-4cbbe4a5528c" width="400px">
+<img src="https://github.com/user-attachments/assets/651979b8-662d-4414-a8da-4cbbe4a5528c" width="500px">
 
 ### 个人中心  
-<img src="https://github.com/user-attachments/assets/fff59fa9-c727-4566-899f-ee8b60f503ab" width="400px">
+<img src="https://github.com/user-attachments/assets/fff59fa9-c727-4566-899f-ee8b60f503ab" width="500px">
 
 ## 4.工程的配置文件  
 在Spring\pet\src\main\resources\下新建配置文件即可
@@ -64,50 +64,4 @@ aliyun:
   accessKeyId: xxxxx
   accessKeySecret: xxxxxx
 ```
-
-
-### 2.application-dev.yml开发环境下文件 
-<img src="https://github.com/user-attachments/assets/1229803e-6138-40f6-86b2-9159298d4342" width="210px" alt="网络配置1"> 
-
-```java
-spring:
-  # 数据库配置
-  datasource:
-    url: jdbc:mysql://xxx.xxx.xxx.xxx:xxxx/pet_platform
-    username: xxxx
-    password: xxxxxx
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    jpa:
-      hibernate:
-        ddl-auto: update
-      database-platform: org.hibernate.dialect.MySQL8Dialect
-
-mybatis:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  mapper-locations: classpath:mapper/**/*.xml
-
-# 订单编号秘钥
-order:
-  key: xxxxxxxxxxxxxxxxxxx
-
-logging:
-  level:
-    org.springframework.web: DEBUG
-
-server:
-  port: 8080
-  address: 0.0.0.0
-
-# ip地址
-server-ip: xxx.xxx.xxx.xxx
-
-# 定时器
-scheduler:
-  cron:
-    expression: 0 0 * * * *
-```
-
-### 3.application-prod.ymls生产环境下文件 
-根据application-dev.yml更改即可
 
