@@ -31,37 +31,7 @@ Web网页端为店家提供全方面的管理服务，主要以为用户配送�
 <img src="https://github.com/user-attachments/assets/fff59fa9-c727-4566-899f-ee8b60f503ab" width="500px">
 
 ## 4.工程的配置文件  
-在Spring\pet\src\main\resources\下新建配置文件即可
+在src\views\resource\private\key.js下新建配置文件即可
 
-### 1.application.yml文件
-<img src="https://github.com/user-attachments/assets/b8420a42-905d-4f9c-9eb5-cd3186fea8d3" width="210px" alt="高德地图秘钥">  
-
-```java
-spring:
-  profiles:
-    active: dev
-  servlet:
-    # 上传文件大小限制
-    multipart:
-      max-file-size: 100MB
-      max-request-size: 200MB
-  web:
-    resources:
-      cache:
-        period: 0
-      # 文件存储路径
-      static-locations: ${STORAGE_PATH}
-
-# 阿里云短信模版 注册，登录，修改个人信息模版
-phone:
-  message:
-    register: xxxx
-    login: xxxx
-    change: xxxxx
-
-# 阿里云秘钥
-aliyun:
-  accessKeyId: xxxxx
-  accessKeySecret: xxxxxx
-```
+<img src="https://github.com/user-attachments/assets/d8f1d596-052d-4e6d-a770-bef9d2054cc4" width="210px" alt="高德地图秘钥">  
 
